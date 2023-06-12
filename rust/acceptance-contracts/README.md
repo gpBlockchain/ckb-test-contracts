@@ -1,4 +1,5 @@
-# spawnDemo
+# acceptance-contracts
+
 
 Build contracts:
 
