@@ -6,4 +6,4 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-ckb-testtool = "0.9"
+ckb-testtool = { git = "https://github.com/quake/capsule", branch = "quake/ckb-0.111", package = "ckb-testtool" }

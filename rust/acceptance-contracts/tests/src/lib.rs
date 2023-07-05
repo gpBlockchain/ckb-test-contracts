@@ -7,6 +7,8 @@ use std::str::FromStr;
 #[cfg(test)]
 // mod tests;
 mod test_loop_contract;
+mod test_always_success;
+mod test_contract_type;
 
 const TEST_ENV_VAR: &str = "CAPSULE_TEST_ENV";
 

@@ -4,12 +4,12 @@
 # workspace_dir = "."
 
 # capsule version
-version = "0.10.0 34dc3be-dirty"
+version = "0.10.1 25fd7d4"
 # path of deployment config file
 deployment = "deployment.toml"
 
 [[contracts]]
-name = "spawnDemo"
+name = "spawn_demo"
 template_type = "Rust"
 
 [[contracts]]
@@ -18,9 +18,4 @@ template_type = "Rust"
 
 [[contracts]]
 name = "loop_contract"
-template_type = "Rust"
-
-
-[[contracts]]
-name = "my-sudt"
 template_type = "Rust"
