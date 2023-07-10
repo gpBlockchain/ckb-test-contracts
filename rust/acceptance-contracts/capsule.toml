@@ -19,3 +19,11 @@ template_type = "Rust"
 [[contracts]]
 name = "loop_contract"
 template_type = "Rust"
+
+[[contracts]]
+name = "ckb_get_memory_limit"
+template_type = "Rust"
+
+[[contracts]]
+name = "set_content"
+template_type = "Rust"

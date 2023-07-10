@@ -9,7 +9,7 @@ use ckb_testtool::ckb_types::{
 use ckb_testtool::ckb_error::Error;
 use ckb_testtool::ckb_types::core::ScriptHashType;
 
-const MAX_CYCLES: u64 = 10_000_000;
+const MAX_CYCLES: u64 = 1_000_000_000;
 
 // error numbers
 const ERROR_EMPTY_ARGS: i8 = 0;
@@ -28,6 +28,163 @@ fn assert_script_error(err: Error, err_code: i8) {
 fn test_spawn_demo() {
     test_contract_by_name("spawn_demo");
 }
+
+#[test]
+fn test_ckb_get_memory_limit() {
+    test_contract_by_name("ckb_get_memory_limit")
+}
+
+#[test]
+fn test_ckb_get_memory_limit_spawn() {
+    test_contract_by_name("ckb_get_memory_limit_spawn")
+}
+
+#[test]
+fn test_spawn_wrong_memory_limit() {
+    test_contract_by_name("spawn_wrong_memory_limit")
+}
+
+#[test]
+fn test_spawn_elf_format_error() {
+    test_contract_by_name("spawn_elf_format_error")
+}
+
+#[test]
+fn test_spawn_exceeded_max_content_length() {
+    test_contract_by_name("spawn_exceeded_max_content_length")
+}
+
+#[test]
+fn test_set_content_spawn_length_exceeds_array_size_set_max_length() {
+    test_contract_by_name("set_content_spawn_length_exceeds_array_size_set_max_length")
+}
+
+#[test]
+fn test_spawn_exceeded_max_peak_memory() {
+    test_contract_by_name("spawn_exceeded_max_peak_memory")
+}
+
+#[test]
+#[should_panic(expected = "MemOutOfBound")]
+fn test_spawn_argc_is_u64_max() {
+    test_contract_by_name("spawn_argc_is_u64_max")
+}
+
+
+#[test]
+fn test_spawn_argv() {
+    test_contract_by_name("spawn_argv")
+}
+
+#[test]
+fn test_spawn_index() {
+    test_contract_by_name("spawn_index")
+}
+
+#[test]
+fn test_spawn_argc_not_eq() {
+    test_contract_by_name("spawn_argc_not_eq")
+}
+
+#[test]
+fn test_spawn_content() {
+    test_contract_by_name("spawn_content")
+}
+
+#[test]
+fn test_spawn_query() {
+    test_contract_by_name("spawn_query")
+}
+
+#[test]
+#[should_panic(expected = "ExceededMaximumCycles")]
+fn test_spawn_times() {
+    test_contract_by_name("spawn_times")
+}
+
+#[test]
+fn test_spawn_recursive() {
+    test_contract_by_name("spawn_recursive")
+}
+
+#[test]
+#[should_panic(expected = "ExceededMaximumCycles")]
+fn test_spawn_fib() {
+    test_contract_by_name("spawn_fib")
+}
+
+#[test]
+#[should_panic(expected = "MemOutOfBound")]
+fn test_spawn_out_of_memory() {
+    test_contract_by_name("spawn_out_of_memory")
+}
+
+#[test]
+#[should_panic(expected = "MemOutOfBound")]
+fn test_spawn_exec_memory_limit_le_7() {
+    test_contract_by_name("spawn_exec_memory_limit_le_7");
+}
+
+#[test]
+fn test_spawn_exec_set_content() {
+    test_contract_by_name("spawn_exec_set_content")
+}
+
+#[test]
+fn test_spawn_exec_spawn() {
+    test_contract_by_name("spawn_exec_spawn")
+}
+
+#[test]
+fn test_set_content_without_spawn() {
+    test_contract_by_name("set_content_without_spawn")
+}
+
+#[test]
+fn test_set_content_many_times() {
+    test_contract_by_name("set_content_many_times")
+}
+
+#[test]
+fn test_set_content_exceed_length() {
+    test_contract_by_name("set_content_exceed_length")
+}
+
+#[test]
+fn test_set_content_insufficient_length() {
+    test_contract_by_name("set_content_insufficient_length")
+}
+
+#[test]
+fn test_set_content_nonzero_exit_no_rollback() {
+    test_contract_by_name("set_content_nonzero_exit_no_rollback")
+}
+
+#[test]
+fn test_set_content_data_propagation_to_parent_only() {
+    test_contract_by_name("set_content_data_propagation_to_parent_only")
+}
+
+#[test]
+fn test_set_content_spawn_length_exceeds_array_size_set_array_length() {
+    test_contract_by_name("set_content_spawn_length_exceeds_array_size_set_array_length")
+}
+
+#[test]
+fn test_set_content_spawn_length_exceeds_array_size_set_length() {
+    test_contract_by_name("set_content_spawn_length_exceeds_array_size_set_length")
+}
+
+#[test]
+fn test_set_content_spawn_length_less_than_array_size_set_array_length() {
+    test_contract_by_name("set_content_spawn_length_less_than_array_size_set_array_length")
+}
+
+#[test]
+fn test_set_content_spawn_length_less_than_array_size_set_length() {
+    test_contract_by_name("set_content_spawn_length_less_than_array_size_set_length")
+}
+
 
 fn test_contract_by_name(name: &str) {
     let mut context = Context::default();

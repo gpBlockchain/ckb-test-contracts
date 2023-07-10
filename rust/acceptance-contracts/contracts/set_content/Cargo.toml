@@ -1,0 +1,56 @@
+[package]
+name = "set_content"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+ckb-std = { version = "0.14.0", features = ["ckb2023"] }
+
+[[bin]]
+name = "set_content"
+path = "src/set_content.rs"
+
+[[bin]]
+name = "set_content_without_spawn"
+path = "src/set_content_without_spawn.rs"
+[[bin]]
+name = "set_content_many_times"
+path = "src/set_content_many_times.rs"
+
+[[bin]]
+name = "set_content_exceed_length"
+path = "src/set_content_exceed_length.rs"
+
+[[bin]]
+name = "set_content_insufficient_length"
+path = "src/set_content_insufficient_length.rs"
+
+[[bin]]
+name ="set_content_nonzero_exit_no_rollback"
+path = "src/set_content_nonzero_exit_no_rollback.rs"
+
+[[bin]]
+name = "set_content_data_propagation_to_parent_only"
+path = "src/set_content_data_propagation_to_parent_only.rs"
+
+[[bin]]
+name = "set_content_spawn_length_exceeds_array_size_set_array_length"
+path = "src/set_content_spawn_length_exceeds_array_size_set_array_length.rs"
+
+[[bin]]
+name = "set_content_spawn_length_exceeds_array_size_set_length"
+path = "src/set_content_spawn_length_exceeds_array_size_set_length.rs"
+
+[[bin]]
+name = "set_content_spawn_length_less_than_array_size_set_array_length"
+path = "src/set_content_spawn_length_less_than_array_size_set_array_length.rs"
+
+[[bin]]
+name = "set_content_spawn_length_less_than_array_size_set_length"
+path = "src/set_content_spawn_length_less_than_array_size_set_length.rs"
+
+[[bin]]
+name = "set_content_spawn_length_exceeds_array_size_set_max_length"
+path = "src/set_content_spawn_length_exceeds_array_size_set_max_length.rs"

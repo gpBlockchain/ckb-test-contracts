@@ -7,3 +7,74 @@ edition = "2021"
 
 [dependencies]
 ckb-std = { version = "0.14.0", features = ["ckb2023"] }
+
+[[bin]]
+name = "spawn_demo"
+path = "src/main.rs"
+
+[[bin]]
+name = "spawn_wrong_memory_limit"
+path = "src/spawn_wrong_memory_limit.rs"
+
+[[bin]]
+name = "spawn_elf_format_error"
+path = "src/spawn_elf_format_error.rs"
+
+[[bin]]
+name = "spawn_exceeded_max_content_length"
+path = "src/spawn_exceeded_max_content_length.rs"
+
+[[bin]]
+name = "spawn_exceeded_max_peak_memory"
+path = "src/spawn_exceeded_max_peak_memory.rs"
+
+[[bin]]
+name = "spawn_index"
+path = "src/spawn_index.rs"
+
+[[bin]]
+name = "spawn_argc_not_eq"
+path = "src/spawn_argc_not_eq.rs"
+
+[[bin]]
+name = "spawn_argv"
+path = "src/spawn_argv.rs"
+
+[[bin]]
+name = "spawn_content"
+path = "src/spawn_content.rs"
+
+[[bin]]
+name = "spawn_argc_is_u64_max"
+path = "src/spawn_argc_is_u64_max.rs"
+
+[[bin]]
+name = "spawn_query"
+path = "src/spawn_query.rs"
+
+[[bin]]
+name = "spawn_times"
+path = "src/spawn_times.rs"
+[[bin]]
+name = "spawn_recursive"
+path = "src/spawn_recursive.rs"
+
+[[bin]]
+name = "spawn_fib"
+path = "src/spawn_fib.rs"
+
+[[bin]]
+name = "spawn_out_of_memory"
+path = "src/spawn_out_of_memory.rs"
+
+[[bin]]
+name = "spawn_exec_memory_limit_le_7"
+path = "src/spawn_exec_memory_limit_le_7.rs"
+
+[[bin]]
+name = "spawn_exec_set_content"
+path = "src/spawn_exec_set_content.rs"
+
+[[bin]]
+name = "spawn_exec_spawn"
+path = "src/spawn_exec_spawn.rs"
