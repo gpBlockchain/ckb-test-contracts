@@ -33,9 +33,11 @@ use ckb_std::syscalls::{current_cycles, get_memory_limit, set_content, spawn};
 ///                    uint8_t* content,
 ///                    uint64_t* content_length);
 ///
-///     case1 : spawn(2)
+///     case1 : spawn(content[2:10]) -> set_content([1:256*1024+1])
 ///     result :
-///         spawn return 5(Exceeded max content length.)
+///         set_content return 10;
+///         spawn return 0;
+///         spawn.content = [1:10];
 
 pub fn program_entry() -> i8 {
     let argvs = argv();
@@ -66,7 +68,7 @@ pub fn program_entry() -> i8 {
     assert_eq!(result, 0);
     assert_eq!(exit_code, 0);
     // write failed
-    assert_eq!(test_content, [2; 10]);
+    assert_eq!(test_content, [1; 10]);
     debug!("context length:{:?},result:{:?}",test_content.len(),test_content);
     return 0;
 }

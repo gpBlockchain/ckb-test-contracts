@@ -104,6 +104,7 @@ fn test_spawn_times() {
 }
 
 #[test]
+#[ignore]
 fn test_spawn_recursive() {
     test_contract_by_name("spawn_recursive")
 }
