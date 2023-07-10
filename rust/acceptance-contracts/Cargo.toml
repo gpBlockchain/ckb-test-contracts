@@ -1,5 +1,5 @@
 [workspace]
-members = ["contracts/always_success","contracts/spawn_demo", "contracts/loop_contract","contracts/ckb_get_memory_limit","contracts/set_content"]
+members = ["contracts/always_success","contracts/spawn_demo", "contracts/loop_contract","contracts/ckb_get_memory_limit","contracts/set_content","contracts/rfc49_atomic"]
 exclude = ["tests"]
 
 [profile.release]

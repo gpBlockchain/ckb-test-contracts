@@ -1,0 +1,58 @@
+[package]
+name = "rfc49_atomic"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+ckb-std = { version = "0.14.0", features = ["ckb2023"] }
+
+[[bin]]
+name = "rfc49_atomic"
+path = "src/atomic_demo.rs"
+
+[[bin]]
+name = "atomic_usize"
+path = "src/atomic_usize.rs"
+
+[[bin]]
+name = "atomic_i8"
+path = "src/atomic_i8.rs"
+
+[[bin]]
+name = "atomic_i16"
+path = "src/atomic_i16.rs"
+
+[[bin]]
+name = "atomic_i32"
+path = "src/atomic_i32.rs"
+
+[[bin]]
+name = "atomic_i64"
+path = "src/atomic_i64.rs"
+
+[[bin]]
+name = "atomic_isize"
+path = "src/atomic_isize.rs"
+
+[[bin]]
+name = "atomic_ptr"
+path = "src/atomic_ptr.rs"
+
+[[bin]]
+name = "atomic_u8"
+path = "src/atomic_u8.rs"
+
+
+[[bin]]
+name = "atomic_u16"
+path = "src/atomic_u16.rs"
+
+[[bin]]
+name = "atomic_u32"
+path = "src/atomic_u32.rs"
+
+[[bin]]
+name = "atomic_u64"
+path = "src/atomic_u64.rs"

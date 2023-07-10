@@ -21,7 +21,6 @@ use ckb_std::{debug, syscalls};
 use ckb_std::ckb_constants::Source;
 use ckb_std::env::argv;
 use ckb_std::syscalls::{current_cycles, get_memory_limit, set_content, spawn, exec};
-
 ///
 /// int ckb_set_content(uint8_t* content, uint64_t* length);
 ///

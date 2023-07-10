@@ -27,3 +27,7 @@ template_type = "Rust"
 [[contracts]]
 name = "set_content"
 template_type = "Rust"
+
+[[contracts]]
+name = "rfc49_atomic"
+template_type = "Rust"

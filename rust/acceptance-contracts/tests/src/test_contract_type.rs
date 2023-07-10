@@ -64,6 +64,7 @@ fn test_spawn_exceeded_max_peak_memory() {
     test_contract_by_name("spawn_exceeded_max_peak_memory")
 }
 
+
 #[test]
 #[should_panic(expected = "MemOutOfBound")]
 fn test_spawn_argc_is_u64_max() {
@@ -185,6 +186,65 @@ fn test_set_content_spawn_length_less_than_array_size_set_length() {
     test_contract_by_name("set_content_spawn_length_less_than_array_size_set_length")
 }
 
+#[test]
+fn test_rfc49_atomic(){
+    test_contract_by_name("rfc49_atomic")
+}
+
+#[test]
+fn test_atomic_usize(){
+    test_contract_by_name("atomic_usize")
+}
+
+#[test]
+fn test_atomic_i8(){
+    test_contract_by_name("atomic_i8")
+}
+
+#[test]
+fn test_atomic_i16(){
+    test_contract_by_name("atomic_i16")
+}
+
+#[test]
+fn test_atomic_i32(){
+    test_contract_by_name("atomic_i32")
+}
+
+#[test]
+fn test_atomic_i64(){
+    test_contract_by_name("atomic_i64")
+}
+
+#[test]
+fn test_atomic_isize(){
+    test_contract_by_name("atomic_isize")
+}
+
+#[test]
+fn test_atomic_ptr(){
+    test_contract_by_name("atomic_ptr")
+}
+
+#[test]
+fn test_atomic_u8(){
+    test_contract_by_name("atomic_u8")
+}
+
+#[test]
+fn test_atomic_u16(){
+    test_contract_by_name("atomic_u16")
+}
+
+#[test]
+fn test_atomic_u32(){
+    test_contract_by_name("atomic_u32")
+}
+
+#[test]
+fn test_atomic_u64(){
+    test_contract_by_name("atomic_u64")
+}
 
 fn test_contract_by_name(name: &str) {
     let mut context = Context::default();
