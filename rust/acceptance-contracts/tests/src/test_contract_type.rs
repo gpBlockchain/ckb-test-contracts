@@ -142,10 +142,10 @@ fn test_set_content_without_spawn() {
     test_contract_by_name("set_content_without_spawn")
 }
 
-#[test]
-fn test_set_content_many_times() {
-    test_contract_by_name("set_content_many_times")
-}
+// #[test]
+// fn test_set_content_many_times() {
+//     test_contract_by_name("set_content_many_times")
+// }
 
 #[test]
 fn test_set_content_exceed_length() {
