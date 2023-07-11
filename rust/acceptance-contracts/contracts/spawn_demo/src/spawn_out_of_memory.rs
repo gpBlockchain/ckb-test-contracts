@@ -40,9 +40,10 @@ use ckb_std::syscalls::{current_cycles, get_memory_limit, set_content, spawn};
 ///
 pub fn program_entry() -> i8 {
     let argvs = argv();
-    // debug!("argvs length:{:?}:{:?}",argvs.len(),argvs);
+    debug!("argvs length:{:?}:{:?}",argvs.len(),argvs);
     if argvs.len() > 0 {
-        let mut content: [u8; 1024 * 1024 * 1024] = [1; 1024 * 1024 * 1024];
+        debug!("init content 1gb");
+        let content: [u8; 1024 * 1024 * 1024] = [1; 1024 * 1024 * 1024];
         return 0;
     }
 
@@ -56,14 +57,10 @@ pub fn program_entry() -> i8 {
         content: content.as_mut_ptr(),
         content_length: &content_length as *const u64 as *mut u64,
     };
-    // let cstr1 = CStr::from_bytes_with_nul(b"arg0\0").unwrap();
-    //argv is empty
-    let cstrs = vec![];
-    spawn_args.memory_limit = 2;
-    let result = spawn(0, Source::CellDep, 0, cstrs.as_slice(), &spawn_args);
-    assert_eq!(exit_code, 0);
-    // debug!("result:{:?}",result);
-    let cycles = current_cycles();
-    debug!("cycle:{:?}",cycles);
-    return 0;
+    let cstr1 = CStr::from_bytes_with_nul(b"arg0\0").unwrap();
+    let cstrs = vec![cstr1];
+    spawn_args.memory_limit = 8;
+    // will trigger MemOutOfBound
+    spawn(0, Source::CellDep, 0, cstrs.as_slice(), &spawn_args);
+    return 1;
 }
