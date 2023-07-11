@@ -32,7 +32,7 @@ use ckb_std::syscalls::{current_cycles, get_memory_limit, set_content, spawn};
 ///                    uint8_t* content,
 ///                    uint64_t* content_length);
 ///
-///     case1 : spawn(memory_limit=2) -> init array:[u8; 1024 * 1024 * 1024]
+///     case1 : spawn(memory_limit=2) -> init array:[u8; 1024 * 1024 * 1024] (1GB)
 ///     result：
 ///         ERROR: MemOutOfBound
 ///
