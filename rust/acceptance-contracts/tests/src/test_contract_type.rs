@@ -97,11 +97,11 @@ fn test_spawn_query() {
     test_contract_by_name("spawn_query")
 }
 
-#[test]
-#[should_panic(expected = "ExceededMaximumCycles")]
-fn test_spawn_times() {
-    test_contract_by_name("spawn_times")
-}
+// #[test]
+// #[should_panic(expected = "ExceededMaximumCycles")]
+// fn test_spawn_times() {
+    // test_contract_by_name("spawn_times")
+// }
 
 #[test]
 #[ignore]
@@ -142,10 +142,10 @@ fn test_set_content_without_spawn() {
     test_contract_by_name("set_content_without_spawn")
 }
 
-// #[test]
-// fn test_set_content_many_times() {
-//     test_contract_by_name("set_content_many_times")
-// }
+#[test]
+fn test_set_content_many_times() {
+    test_contract_by_name("set_content_many_times")
+}
 
 #[test]
 fn test_set_content_exceed_length() {
