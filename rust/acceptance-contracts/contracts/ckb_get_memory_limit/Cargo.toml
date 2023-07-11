@@ -1,0 +1,17 @@
+[package]
+name = "ckb_get_memory_limit"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+ckb-std = { version = "0.14.0", features = ["ckb2023"] }
+#
+[[bin]]
+name = "ckb_get_memory_limit"
+path = "src/main.rs"
+
+[[bin]]
+name = "ckb_get_memory_limit_spawn"
+path = "src/spawn_get_memory_limit.rs"

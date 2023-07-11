@@ -7,13 +7,13 @@ use core::ffi::{CStr};
 use ckb_std::{debug, syscalls};
 use ckb_std::ckb_constants::Source;
 use ckb_std::env::argv;
+use ckb_std::high_level::load_transaction;
 use ckb_std::syscalls::{current_cycles, get_memory_limit, set_content, spawn};
 
 use crate::error::Error;
 
 pub fn main() -> Result<(), Error> {
     debug!("!!!before spawn, current_cycles:{:?}",current_cycles());
-
     // let tx = load_transaction().unwrap();
     // debug!("tx:{:?}",tx);
     // let tx = load_tx_hash().unwrap();
