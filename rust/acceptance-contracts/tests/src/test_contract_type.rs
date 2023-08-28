@@ -106,6 +106,7 @@ fn test_spawn_times() {
     println!("time:{}", time.as_millis())
 }
 
+
 #[test]
 fn test_spawn_recursive() {
     test_contract_by_name("spawn_recursive")
