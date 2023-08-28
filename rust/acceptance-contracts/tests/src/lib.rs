@@ -5,7 +5,7 @@ use std::path::PathBuf;
 use std::str::FromStr;
 
 #[cfg(test)]
-// mod tests;
+
 mod test_loop_contract;
 mod test_always_success;
 mod test_contract_type;

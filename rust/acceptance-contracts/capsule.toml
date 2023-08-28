@@ -31,3 +31,7 @@ template_type = "Rust"
 [[contracts]]
 name = "rfc49_atomic"
 template_type = "Rust"
+
+[[contracts]]
+name = "load_block_extension"
+template_type = "Rust"

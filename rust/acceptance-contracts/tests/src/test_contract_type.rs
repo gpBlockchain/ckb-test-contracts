@@ -1,3 +1,4 @@
+use std::time::Instant;
 use super::*;
 use ckb_testtool::context::Context;
 use ckb_testtool::ckb_types::{
@@ -7,10 +8,9 @@ use ckb_testtool::ckb_types::{
     prelude::*,
 };
 use ckb_testtool::ckb_error::Error;
-use ckb_testtool::ckb_types::core::ScriptHashType;
+use ckb_testtool::ckb_types::core::{Cycle, ScriptHashType};
 
-const MAX_CYCLES: u64 = 1_000_000_000;
-
+const MAX_CYCLES: u64 = 1000_000_000;
 // error numbers
 const ERROR_EMPTY_ARGS: i8 = 0;
 
@@ -100,11 +100,13 @@ fn test_spawn_query() {
 #[test]
 #[should_panic(expected = "ExceededMaximumCycles")]
 fn test_spawn_times() {
-    test_contract_by_name("spawn_times")
+    let time1 = Instant::now();
+    test_contract_by_name_with_cycle("spawn_times", 1_000_000);
+    let time = time1.elapsed();
+    println!("time:{}", time.as_millis())
 }
 
 #[test]
-#[ignore]
 fn test_spawn_recursive() {
     test_contract_by_name("spawn_recursive")
 }
@@ -188,69 +190,102 @@ fn test_set_content_spawn_length_less_than_array_size_set_length() {
 }
 
 #[test]
-fn test_rfc49_atomic(){
+fn test_rfc49_atomic() {
     test_contract_by_name("rfc49_atomic")
 }
 
 #[test]
-fn test_atomic_usize(){
+fn test_atomic_usize() {
     test_contract_by_name("atomic_usize")
 }
 
 #[test]
-fn test_atomic_i8(){
+fn test_atomic_i8() {
     test_contract_by_name("atomic_i8")
 }
 
 #[test]
-fn test_atomic_i16(){
+fn test_atomic_i16() {
     test_contract_by_name("atomic_i16")
 }
 
 #[test]
-fn test_atomic_i32(){
+fn test_atomic_i32() {
     test_contract_by_name("atomic_i32")
 }
 
 #[test]
-fn test_atomic_i64(){
+fn test_atomic_i64() {
     test_contract_by_name("atomic_i64")
 }
 
 #[test]
-fn test_atomic_isize(){
+fn test_atomic_isize() {
     test_contract_by_name("atomic_isize")
 }
 
 #[test]
-fn test_atomic_ptr(){
+fn test_atomic_ptr() {
     test_contract_by_name("atomic_ptr")
 }
 
 #[test]
-fn test_atomic_u8(){
+fn test_atomic_u8() {
     test_contract_by_name("atomic_u8")
 }
 
 #[test]
-fn test_atomic_u16(){
+fn test_atomic_u16() {
     test_contract_by_name("atomic_u16")
 }
 
 #[test]
-fn test_atomic_u32(){
+fn test_atomic_u32() {
     test_contract_by_name("atomic_u32")
 }
 
 #[test]
-fn test_atomic_u64(){
+fn test_atomic_u64() {
     test_contract_by_name("atomic_u64")
 }
 
+#[test]
+fn test_block_load_extension() {
+    test_contract_by_name("load_block_extension")
+}
+
+#[test]
+#[ignore]
+fn test_spawn_current_cycles() {
+    test_contract_by_name("spawn_current_cycles")
+}
+
+#[test]
+fn test_spawn_current_memory() {
+    test_contract_by_name("spawn_current_memory")
+}
+
 fn test_contract_by_name(name: &str) {
+    test_contract_by_name_with_cycle(name, MAX_CYCLES);
+}
+
+fn test_contract_by_name_with_cycle(name: &str, cycle: u64) {
     let mut context = Context::default();
     let contract_bin: Bytes = Loader::default().load_binary(name);
     let out_point = context.deploy_cell(contract_bin);
+
+    // prepare headers
+    let h1 = Header::new_builder()
+        .raw(RawHeader::new_builder().number(1u64.pack()).build())
+        .build()
+        .into_view();
+    context.insert_header(h1.clone());
+    context.link_cell_with_block(out_point.clone(), h1.hash(), 0);
+    // 不加
+    context.block_extensions.insert(h1.hash(), Bytes::from_static(&[1, 2, 3]));
+
+    // 加的话
+    // context.insert_extension(h1.hash(),Bytes::from_static(&[1,2,3]));
 
     // prepare scripts
     let lock_script = context
@@ -265,8 +300,19 @@ fn test_contract_by_name(name: &str) {
             .build(),
         Bytes::new(),
     );
+    let input_out_point2 = context.create_cell(
+        CellOutput::new_builder()
+            .capacity(1000u64.pack())
+            .lock(lock_script.clone())
+            .build(),
+        Bytes::new(),
+    );
     let input = CellInput::new_builder()
         .previous_output(input_out_point)
+        .build();
+
+    let input2 = CellInput::new_builder()
+        .previous_output(input_out_point2)
         .build();
     let outputs = vec![
         CellOutput::new_builder()
@@ -278,20 +324,23 @@ fn test_contract_by_name(name: &str) {
             .lock(lock_script)
             .build(),
     ];
+    let inputs = vec![input, input2];
 
     let outputs_data = vec![Bytes::new(); 2];
 
     // build transaction
     let tx = TransactionBuilder::default()
-        .input(input)
+        .inputs(inputs)
         .outputs(outputs)
         .outputs_data(outputs_data.pack())
+        .header_dep(h1.hash())
+        // .cell_deps(out_point.clone())
         .build();
     let tx = context.complete_tx(tx);
 
     // run
     let cycles = context
-        .verify_tx(&tx, MAX_CYCLES)
+        .verify_tx(&tx, cycle)
         .expect("pass verification");
     println!("test_success: consume cycles: {}", cycles);
 }

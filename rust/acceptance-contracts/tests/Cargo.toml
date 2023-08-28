@@ -7,3 +7,5 @@ edition = "2021"
 
 [dependencies]
 ckb-testtool = { git = "https://github.com/quake/capsule", branch = "quake/ckb-0.111", package = "ckb-testtool" }
+#https://github.com/gpBlockchain/capsule.git
+#ckb-testtool = { git = "https://github.com/gpBlockchain/capsule", branch = "quake/ckb-0.111", package = "ckb-testtool" }

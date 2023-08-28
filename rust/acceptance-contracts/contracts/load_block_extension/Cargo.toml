@@ -1,5 +1,5 @@
 [package]
-name = "loop_contract"
+name = "load_block_extension"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,3 +7,6 @@ edition = "2021"
 
 [dependencies]
 ckb-std={ git = "https://github.com/nervosnetwork/ckb-std.git", branch = "master", features = ["ckb2023"] }
+[[bin]]
+name = "load_block_extension"
+path = "src/load_block_extension.rs"
