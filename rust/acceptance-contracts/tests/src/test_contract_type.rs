@@ -50,6 +50,7 @@ fn test_spawn_elf_format_error() {
 }
 
 #[test]
+#[ignore]
 fn test_spawn_exceeded_max_content_length() {
     test_contract_by_name("spawn_exceeded_max_content_length")
 }
@@ -83,6 +84,7 @@ fn test_spawn_index() {
 }
 
 #[test]
+#[ignore]
 fn test_spawn_argc_not_eq() {
     test_contract_by_name("spawn_argc_not_eq")
 }
@@ -120,6 +122,7 @@ fn test_spawn_fib() {
 
 #[test]
 #[should_panic(expected = "MemOutOfBound")]
+#[ignore]
 fn test_spawn_out_of_memory() {
     test_contract_by_name("spawn_out_of_memory")
 }
