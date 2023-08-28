@@ -65,7 +65,7 @@ pub fn program_entry() -> i8 {
     let cstrs = vec![];
 
     spawn_args.memory_limit = 1;
-    for i in 0..10000 {
+    for i in 0..74320000 {
         debug!("current idx:{:?}",i);
         let result = spawn(0, Source::CellDep, 0, cstrs.as_slice(), &spawn_args);
         assert_eq!(exit_code, 0);

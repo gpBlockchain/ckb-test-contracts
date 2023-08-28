@@ -1,6 +1,6 @@
 echo "get capsule "
 cargo install cross --git https://github.com/cross-rs/cross
-cargo install ckb-capsule --git https://github.com/quake/capsule.git --branch quake/ckb-0.111
+cargo install ckb-capsule --git https://github.com/gpBlockchain/capsule.git --branch quake/ckb-0.111
 echo "build rust contract"
 cd rust/acceptance-contracts
 capsule build
