@@ -259,7 +259,6 @@ fn test_block_load_extension() {
 }
 
 #[test]
-#[ignore]
 fn test_spawn_current_cycles() {
     test_contract_by_name("spawn_current_cycles")
 }
