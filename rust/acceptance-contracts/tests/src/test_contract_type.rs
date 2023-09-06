@@ -103,7 +103,7 @@ fn test_spawn_query() {
 #[should_panic(expected = "ExceededMaximumCycles")]
 fn test_spawn_times() {
     let time1 = Instant::now();
-    test_contract_by_name_with_cycle("spawn_times", 1_000_000);
+    test_contract_by_name_with_cycle("spawn_times", 100_000_000);
     let time = time1.elapsed();
     println!("time:{}", time.as_millis())
 }
@@ -259,7 +259,6 @@ fn test_block_load_extension() {
 }
 
 #[test]
-#[ignore]
 fn test_spawn_current_cycles() {
     test_contract_by_name("spawn_current_cycles")
 }

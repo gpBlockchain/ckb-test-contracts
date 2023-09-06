@@ -27,9 +27,9 @@ use ckb_std::syscalls::{current_cycles, current_memory, get_memory_limit, set_co
 /// test case :
 /// invoke current_cycles
 ///
-///     case1 : index not exist
+///     case1 : call current_cycles many times
 ///     result：
-///        spawn return 1
+///        result must increase
 ///
 ///
 pub fn program_entry() -> i8 {
@@ -65,8 +65,8 @@ pub fn program_entry() -> i8 {
     }
     spawn_args.memory_limit = 7;
     let result = spawn(0, Source::CellDep, 0, cstrs.as_slice(), &spawn_args);
-    assert_eq!(result,0);
-    assert_eq!(exit_code,0);
+    assert_eq!(result, 0);
+    assert_eq!(exit_code, 0);
     debug!("arg length:{},content1:{:?}",argvs.len(),content);
     let restored_number = u64::from_le_bytes(content);
     debug!("Restored u64: {}", restored_number);
@@ -76,15 +76,15 @@ pub fn program_entry() -> i8 {
     assert!(current_cycle2 > restored_number);
     content = [0; 8];
     let result = spawn(0, Source::CellDep, 0, cstrs.as_slice(), &spawn_args);
-    assert_eq!(result,0);
-    assert_eq!(exit_code,0);
+    assert_eq!(result, 0);
+    assert_eq!(exit_code, 0);
     debug!("arg length:{},content2:{:?}",argvs.len(),content);
     let restored_number2 = u64::from_le_bytes(content);
     debug!("Restored u64: {}", restored_number2);
-    assert!(restored_number > current_cycle2);
+    assert!(restored_number2 > current_cycle2);
     let current_cycle3 = current_cycles();
     debug!("current cycle:{}, argv length:{} -4 ",current_cycle3,argvs.len());
-    assert!(current_cycle3 > restored_number);
+    assert!(current_cycle3 > restored_number2);
     let set_cycles = current_cycles();
     debug!("set u64:{}",set_cycles);
     set_content(&set_cycles.to_le_bytes()).expect("TODO: panic message");
