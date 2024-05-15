@@ -16,7 +16,6 @@ use core::result::Result;
 
 use ckb_std::{debug};
 use ckb_std::env::argv;
-use ckb_std::syscalls::{set_content};
 use core::sync::atomic::{AtomicBool, AtomicI32, Ordering};
 
 ///
