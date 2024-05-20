@@ -11,16 +11,12 @@ ckb-std = { git = "https://github.com/libraries/ckb-std.git", branch = "new_spaw
 
 [[bin]]
 name = "spawn_demo"
-path = "src/main.rs"
+path = "src/spawn_demo.rs"
 
-#[[bin]]
-#name = "spawn_wrong_memory_limit"
-#path = "src/spawn_wrong_memory_limit.rs"
-#
 #[[bin]]
 #name = "spawn_elf_format_error"
 #path = "src/spawn_elf_format_error.rs"
-#
+
 #[[bin]]
 #name = "spawn_exceeded_max_content_length"
 #path = "src/spawn_exceeded_max_content_length.rs"

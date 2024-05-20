@@ -23,10 +23,6 @@ fn assert_script_error(err: Error, err_code: i8) {
     );
 }
 
-#[test]
-fn test_spawn_demo() {
-    test_contract_by_name("spawn_demo");
-}
 
 
 
@@ -94,6 +90,11 @@ fn test_atomic_u64() {
 #[test]
 fn test_block_load_extension() {
     test_contract_by_name("load_block_extension")
+}
+
+#[test]
+fn test_spawn_demo() {
+    test_contract_by_name("spawn_demo")
 }
 
 
