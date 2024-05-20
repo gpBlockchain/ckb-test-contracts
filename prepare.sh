@@ -4,11 +4,11 @@ cargo install ckb-capsule --git https://github.com/gpBlockchain/capsule.git --br
 echo "build rust contract"
 cd rust/acceptance-contracts
 capsule build
-echo "build c contract "
-cd ../../
-cd c
-mkdir deps
-cd deps
-git clone https://github.com/nervosnetwork/ckb-c-stdlib
-cd ../
-make all-in-docker
+#echo "build c contract "
+#cd ../../
+#cd c
+#mkdir deps
+#cd deps
+#git clone https://github.com/nervosnetwork/ckb-c-stdlib
+#cd ../
+#make all-in-docker
