@@ -9,6 +9,7 @@ use std::str::FromStr;
 mod test_loop_contract;
 mod test_always_success;
 mod test_contract_type;
+mod test_ckb_spawn;
 
 const TEST_ENV_VAR: &str = "CAPSULE_TEST_ENV";
 

@@ -7,7 +7,7 @@ use ckb_testtool::ckb_types::{
     prelude::*,
 };
 use ckb_testtool::ckb_error::Error;
-use ckb_testtool::ckb_types::core::{ ScriptHashType};
+use ckb_testtool::ckb_types::core::{ScriptHashType};
 
 const MAX_CYCLES: u64 = 1000_000_000;
 // error numbers
@@ -22,9 +22,6 @@ fn assert_script_error(err: Error, err_code: i8) {
         err_code
     );
 }
-
-
-
 
 
 #[test]
@@ -133,39 +130,19 @@ fn test_contract_by_name_with_cycle(name: &str, cycle: u64) {
             .build(),
         Bytes::new(),
     );
-    let input_out_point2 = context.create_cell(
-        CellOutput::new_builder()
-            .capacity(1000u64.pack())
-            .lock(lock_script.clone())
-            .build(),
-        Bytes::new(),
-    );
-    let input = CellInput::new_builder()
-        .previous_output(input_out_point)
-        .build();
-
-    let input2 = CellInput::new_builder()
-        .previous_output(input_out_point2)
-        .build();
-    let outputs = vec![
-        CellOutput::new_builder()
-            .capacity(500u64.pack())
-            .lock(lock_script.clone())
-            .build(),
-        CellOutput::new_builder()
-            .capacity(500u64.pack())
-            .lock(lock_script)
-            .build(),
-    ];
-    let inputs = vec![input, input2];
-
-    let outputs_data = vec![Bytes::new(); 2];
 
     // build transaction
     let tx = TransactionBuilder::default()
-        .inputs(inputs)
-        .outputs(outputs)
-        .outputs_data(outputs_data.pack())
+        .inputs(vec![CellInput::new_builder()
+            .previous_output(input_out_point)
+            .build()])
+        .outputs(vec![
+            CellOutput::new_builder()
+                .capacity(1000u64.pack())
+                .lock(lock_script.clone())
+                .build()
+        ])
+        .outputs_data(vec![Bytes::new(); 1].pack())
         .header_dep(h1.hash())
         // .cell_deps(out_point.clone())
         .build();
