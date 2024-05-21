@@ -58,3 +58,6 @@ fn test_spawn_loop_times() {}
 #[test]
 fn test_spawn_recursion_times() {}
 
+
+#[test]
+fn test_spawn_can_stop_when_son_spawn_pause(){}
