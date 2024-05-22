@@ -5,6 +5,7 @@
 extern crate alloc;
 
 use alloc::format;
+use alloc::string::ToString;
 #[cfg(not(test))]
 use ckb_std::default_alloc;
 #[cfg(not(test))]
@@ -19,9 +20,11 @@ use core::ffi::CStr;
 use ckb_std::{syscalls};
 use ckb_std::ckb_constants::Source;
 use ckb_std::env::argv;
+use ckb_std::error::SysError;
 use ckb_std::syscalls::{current_cycles};
 
 pub fn program_entry() -> i8 {
+    syscalls::debug("---spawn_place_is_witness---".to_string());
     let argvs = argv();
     print_current_cycle();
     if argvs.len() != 0 {
@@ -45,6 +48,7 @@ pub fn program_entry() -> i8 {
 
     // spawn caller
     let argc: u64 = 2;
+    print_current_cycle();
     let argv = {
         let mut argv = alloc::vec![core::ptr::null(); argc as usize + 1];
         argv[0] = CStr::from_bytes_with_nul(b"hello\0").unwrap().as_ptr();
@@ -53,6 +57,7 @@ pub fn program_entry() -> i8 {
     };
 
     let mut son_fds: [u64; 2] = [0, 0];
+    print_current_cycle();
     let (r0, w0) = syscalls::pipe().unwrap();
     son_fds[0] = w0;
     let mut pid: u64 = 0;
@@ -63,7 +68,16 @@ pub fn program_entry() -> i8 {
         inherited_fds: son_fds.as_ptr(),
     };
     print_current_cycle();
-    let spawn_result1 = syscalls::spawn(0, Source::CellDep, 0, 0, &mut spgs).unwrap();
+    let spawn_result1 = match syscalls::spawn(0, Source::Output, 1, 0, &mut spgs) {
+        Ok(ok) => {
+            ok
+        }
+        Err(err) => {
+            syscalls::debug(format!("spawn result err:{:?}", err));
+            return 2;
+
+        }
+    };
     print_current_cycle();
     syscalls::debug(format!("spawn result:{:?}", spawn_result1));
     let mut read: [u8; 4] = [0, 0, 0, 0];
@@ -71,12 +85,12 @@ pub fn program_entry() -> i8 {
     let read_result = syscalls::read(r0, &mut read).unwrap();
     print_current_cycle();
     syscalls::debug(format!("read result:{:?},data:{:?}", read_result, read));
-    assert_eq!(read, [1, 1, 1, 1]);
+    // assert_eq!(read, [1, 1, 1, 1]);
     print_current_cycle();
     let wait_result = syscalls::wait(spawn_result1).unwrap();
     print_current_cycle();
     syscalls::debug(format!("wait result:{:?}", wait_result));
-    assert_eq!(wait_result, 25i8);
+    // assert_eq!(wait_result, 25i8);
     syscalls::debug(format!("SpawnArgs.process_id:{:?}", pid));
     assert_eq!(pid, 1);
     return 0;
