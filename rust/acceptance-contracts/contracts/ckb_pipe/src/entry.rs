@@ -31,4 +31,5 @@ pub fn main() -> Result<(), Error> {
     // Just for example, we won't assert the length here because we are writing a huge buffer
     // assert_eq!(len, 10);
 
-    Ok
+    Ok(())
+}
