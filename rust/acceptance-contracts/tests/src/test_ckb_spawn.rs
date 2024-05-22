@@ -1,32 +1,257 @@
+use ckb_testtool::bytes::Bytes;
+use ckb_testtool::ckb_types::core::{ScriptHashType, TransactionBuilder};
+use ckb_testtool::ckb_types::packed::{CellInput, CellOutput, Header, RawHeader};
+use ckb_testtool::ckb_types::prelude::{Builder, Entity, IntoHeaderView, Pack};
+use ckb_testtool::context::Context;
+use crate::Loader;
+use crate::prelude::ContextExt;
+
 #[test]
 fn test_source_is_input_cell() {
-    // gp
-    // spawn 调用 input cell
+    let name = "spawn_source_is_input_cell";
+    let cycle = 1000_000_000;
+    let mut context = Context::default();
+    let contract_bin: Bytes = Loader::default().load_binary(name);
+    let out_point = context.deploy_cell(contract_bin.clone());
+
+    // prepare headers
+    let h1 = Header::new_builder()
+        .raw(RawHeader::new_builder().number(1u64.pack()).build())
+        .build()
+        .into_view();
+    context.insert_header(h1.clone());
+    context.link_cell_with_block(out_point.clone(), h1.hash(), 0);
+    // 不加
+    context.block_extensions.insert(h1.hash(), Bytes::from_static(&[1, 2, 3]));
+
+    // prepare scripts
+    let lock_script = context
+        .build_script_with_hash_type(&out_point, ScriptHashType::Data2, Bytes::from(vec![42]))
+        .expect("script");
+
+    // prepare input  cells with contract bin
+    let input_out_point = context.create_cell(
+        CellOutput::new_builder()
+            .capacity(1000u64.pack())
+            .lock(lock_script.clone())
+            .build(),
+        contract_bin,
+    );
+
+    // build transaction
+    let tx = TransactionBuilder::default()
+        .inputs(vec![CellInput::new_builder()
+            .previous_output(input_out_point)
+            .build()])
+        .outputs(vec![
+            CellOutput::new_builder()
+                .capacity(1000u64.pack())
+                .lock(lock_script.clone())
+                .build()
+        ])
+        .outputs_data(vec![Bytes::new(); 1].pack())
+        .header_dep(h1.hash())
+        // .cell_deps(out_point.clone())
+        .build();
+    let tx = context.complete_tx(tx);
+
+    // run
+    let cycles = context
+        .verify_tx(&tx, cycle)
+        .expect("pass verification");
+    println!("test_success: consume cycles: {}", cycles);
 }
 
 #[test]
-fn test_index_is_out_of_range(){
+fn test_index_is_out_of_range() {
     // xyl
     // 调用的index 不存在
 }
 
 #[test]
 fn test_source_is_output_cell() {
-    // gp
-    // spawn 调用 output cell
+    let name = "spawn_source_is_output_cell";
+    let cycle = 1000_000_000;
+    let mut context = Context::default();
+    let contract_bin: Bytes = Loader::default().load_binary(name);
+    let out_point = context.deploy_cell(contract_bin.clone());
+
+    // prepare headers
+    let h1 = Header::new_builder()
+        .raw(RawHeader::new_builder().number(1u64.pack()).build())
+        .build()
+        .into_view();
+    context.insert_header(h1.clone());
+    context.link_cell_with_block(out_point.clone(), h1.hash(), 0);
+    // 不加
+    context.block_extensions.insert(h1.hash(), Bytes::from_static(&[1, 2, 3]));
+
+    // prepare scripts
+    let lock_script = context
+        .build_script_with_hash_type(&out_point, ScriptHashType::Data2, Bytes::from(vec![42]))
+        .expect("script");
+
+    // prepare input  cells with contract bin
+    let input_out_point = context.create_cell(
+        CellOutput::new_builder()
+            .capacity(1000u64.pack())
+            .lock(lock_script.clone())
+            .build(),
+        Bytes::new(),
+    );
+
+    // build transaction
+    let tx = TransactionBuilder::default()
+        .inputs(vec![CellInput::new_builder()
+            .previous_output(input_out_point)
+            .build()])
+        .outputs(vec![
+            CellOutput::new_builder()
+                .capacity(1000u64.pack())
+                .lock(lock_script.clone())
+                .build()
+        ])
+        .outputs_data(vec![contract_bin; 1].pack())
+        .header_dep(h1.hash())
+        // .cell_deps(out_point.clone())
+        .build();
+    let tx = context.complete_tx(tx);
+
+    // run
+    let cycles = context
+        .verify_tx(&tx, cycle)
+        .expect("pass verification");
+    println!("test_success: consume cycles: {}", cycles);
 }
 
 #[test]
 fn test_place_is_witness() {
-    // gp
-    // spawn 调用 witness 合约
 
+    let name = "spawn_place_is_witness";
+    let cycle = 1000_000_000;
+    let mut context = Context::default();
+    let contract_bin: Bytes = Loader::default().load_binary(name);
+    let out_point = context.deploy_cell(contract_bin.clone());
+
+    // prepare headers
+    let h1 = Header::new_builder()
+        .raw(RawHeader::new_builder().number(1u64.pack()).build())
+        .build()
+        .into_view();
+    context.insert_header(h1.clone());
+    context.link_cell_with_block(out_point.clone(), h1.hash(), 0);
+    // 不加
+    context.block_extensions.insert(h1.hash(), Bytes::from_static(&[1, 2, 3]));
+
+    // prepare scripts
+    let lock_script = context
+        .build_script_with_hash_type(&out_point, ScriptHashType::Data2, Bytes::from(vec![42]))
+        .expect("script");
+
+    // prepare input  cells with contract bin
+    let input_out_point = context.create_cell(
+        CellOutput::new_builder()
+            .capacity(1000u64.pack())
+            .lock(lock_script.clone())
+            .build(),
+        Bytes::new(),
+    );
+
+    // build transaction
+    let tx = TransactionBuilder::default()
+        .inputs(vec![CellInput::new_builder()
+            .previous_output(input_out_point)
+            .build()])
+        .outputs(vec![
+            CellOutput::new_builder()
+                .capacity(1000u64.pack())
+                .lock(lock_script.clone())
+                .build()
+        ])
+        .outputs_data(vec![Bytes::new(); 1].pack())
+        .header_dep(h1.hash())
+        .witness(contract_bin.pack())
+        // .cell_deps(out_point.clone())
+        .build();
+    let tx = context.complete_tx(tx);
+
+    // run
+    let cycles = context
+        .should_be_passed(&tx, cycle)
+        .expect("pass verification");
+    println!("test_success: consume cycles: {}", cycles);
+}
+
+#[test]
+fn test_place_is_out_of_range(){
+    // spawn_place_is_out_of_range
+    let name = "spawn_place_is_out_of_range";
+    let cycle = 1000_000_000;
+    let mut context = Context::default();
+    let contract_bin: Bytes = Loader::default().load_binary(name);
+    let out_point = context.deploy_cell(contract_bin.clone());
+
+    // prepare headers
+    let h1 = Header::new_builder()
+        .raw(RawHeader::new_builder().number(1u64.pack()).build())
+        .build()
+        .into_view();
+    context.insert_header(h1.clone());
+    context.link_cell_with_block(out_point.clone(), h1.hash(), 0);
+    // 不加
+    context.block_extensions.insert(h1.hash(), Bytes::from_static(&[1, 2, 3]));
+
+    // prepare scripts
+    let lock_script = context
+        .build_script_with_hash_type(&out_point, ScriptHashType::Data2, Bytes::from(vec![42]))
+        .expect("script");
+
+    // prepare input  cells with contract bin
+    let input_out_point = context.create_cell(
+        CellOutput::new_builder()
+            .capacity(1000u64.pack())
+            .lock(lock_script.clone())
+            .build(),
+        Bytes::new(),
+    );
+
+    // build transaction
+    let tx = TransactionBuilder::default()
+        .inputs(vec![CellInput::new_builder()
+            .previous_output(input_out_point)
+            .build()])
+        .outputs(vec![
+            CellOutput::new_builder()
+                .capacity(1000u64.pack())
+                .lock(lock_script.clone())
+                .build()
+        ])
+        .outputs_data(vec![Bytes::new(); 1].pack())
+        .header_dep(h1.hash())
+        .witness(contract_bin.pack())
+        // .cell_deps(out_point.clone())
+        .build();
+    let tx = context.complete_tx(tx);
+
+    // run
+    let cycles = context
+        .verify_tx(&tx, cycle)
+        .expect("pass verification");
+    println!("test_success: consume cycles: {}", cycles);
 }
 
 #[test]
 fn test_bounds_is_not_0() {
     // gp
     // spawn 调用 bounds
+    let name = "spawn_place_is_out_of_range";
+    let cycle = 1000_000_000;
+    let mut context = Context::default();
+    let contract_bin: Bytes = Loader::default().load_binary(name);
+    let l = contract_bin.len() as u64;
+    let h = 3 << 32;
+    let bounds = h | l;
+    println!("bounds:{:x},h:{:x},l:{:x}",bounds,h,l)
 }
 
 #[test]
@@ -121,14 +346,13 @@ fn test_spawn_recursion_times() {
 }
 
 #[test]
-fn test_cycle_inc_when_contains_recursion_and_loop_spawn(){
+fn test_cycle_inc_when_contains_recursion_and_loop_spawn() {
     // gp
-
 }
 
 
 #[test]
-fn test_spawn_can_stop_when_son_spawn_pause(){
+fn test_spawn_can_stop_when_son_spawn_pause() {
     // gp
     // 子进程停了，子进程生成的spawn还没结束
 }

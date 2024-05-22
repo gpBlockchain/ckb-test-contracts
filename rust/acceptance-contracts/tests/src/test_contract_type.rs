@@ -102,7 +102,7 @@ fn test_contract_by_name(name: &str) {
 fn test_contract_by_name_with_cycle(name: &str, cycle: u64) {
     let mut context = Context::default();
     let contract_bin: Bytes = Loader::default().load_binary(name);
-    let out_point = context.deploy_cell(contract_bin);
+    let out_point = context.deploy_cell(contract_bin.clone());
 
     // prepare headers
     let h1 = Header::new_builder()
@@ -128,7 +128,7 @@ fn test_contract_by_name_with_cycle(name: &str, cycle: u64) {
             .capacity(1000u64.pack())
             .lock(lock_script.clone())
             .build(),
-        Bytes::new(),
+        contract_bin,
     );
 
     // build transaction
