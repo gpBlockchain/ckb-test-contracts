@@ -8,6 +8,7 @@ use ckb_testtool::ckb_types::{
 };
 use ckb_testtool::ckb_error::Error;
 use ckb_testtool::ckb_types::core::{ScriptHashType};
+use crate::prelude::ContextExt;
 
 const MAX_CYCLES: u64 = 1000_000_000;
 // error numbers
@@ -111,10 +112,9 @@ fn test_contract_by_name_with_cycle(name: &str, cycle: u64) {
         .into_view();
     context.insert_header(h1.clone());
     context.link_cell_with_block(out_point.clone(), h1.hash(), 0);
-    // 不加
+
     context.block_extensions.insert(h1.hash(), Bytes::from_static(&[1, 2, 3]));
 
-    // 加的话
     // context.insert_extension(h1.hash(),Bytes::from_static(&[1,2,3]));
 
     // prepare scripts
@@ -128,7 +128,7 @@ fn test_contract_by_name_with_cycle(name: &str, cycle: u64) {
             .capacity(1000u64.pack())
             .lock(lock_script.clone())
             .build(),
-        contract_bin,
+        Bytes::new(),
     );
 
     // build transaction
@@ -150,7 +150,7 @@ fn test_contract_by_name_with_cycle(name: &str, cycle: u64) {
 
     // run
     let cycles = context
-        .verify_tx(&tx, cycle)
+        .should_be_passed(&tx, cycle)
         .expect("pass verification");
     println!("test_success: consume cycles: {}", cycles);
 }
