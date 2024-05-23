@@ -8,26 +8,7 @@ version = "0.10.1 25fd7d4"
 # path of deployment config file
 deployment = "deployment.toml"
 
-[[contracts]]
-name = "spawn_demo"
-template_type = "Rust"
 
-[[contracts]]
-name = "always_success"
-template_type = "Rust"
-
-[[contracts]]
-name = "loop_contract"
-template_type = "Rust"
-
-
-[[contracts]]
-name = "rfc49_atomic"
-template_type = "Rust"
-
-[[contracts]]
-name = "load_block_extension"
-template_type = "Rust"
 
 [[contracts]]
 name = "ckb_pipe"

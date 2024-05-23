@@ -38,6 +38,7 @@ pub fn program_entry() -> i8 {
         print_current_cycle();
 
         // Create a 512KB buffer for writing
+        syscalls::debug(format!("write buffer size:{:?}", BUFFER_SIZE));
         let write_buffer = vec![1u8; BUFFER_SIZE];
         let write_result = syscalls::write(std_fds[0], &write_buffer).unwrap();
         print_current_cycle();
