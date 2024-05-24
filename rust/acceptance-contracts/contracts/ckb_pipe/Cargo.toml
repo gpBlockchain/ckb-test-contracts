@@ -11,3 +11,7 @@ ckb-std = { git = "https://github.com/nervosnetwork/ckb-std.git", branch = "mast
 [[bin]]
 name = "ckb_pipe"
 path = "src/ckb_pipe.rs"
+
+[[bin]]
+name = "ckb_spawn_exited_fd_close"
+path = "src/ckb_spawn_exited_fd_close.rs"

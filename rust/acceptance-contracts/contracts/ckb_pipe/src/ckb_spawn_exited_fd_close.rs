@@ -20,7 +20,7 @@ use ckb_std::env::argv;
 use ckb_std::syscalls::{current_cycles};
 use alloc::vec;
 
-const BUFFER_SIZE: usize = 512 * 1024; // 512KB buffer size
+const BUFFER_SIZE: usize = 256 * 1024; // 256KB buffer size
 
 pub fn program_entry() -> i8 {
     let argvs = argv();
@@ -37,7 +37,7 @@ pub fn program_entry() -> i8 {
         syscalls::debug(format!("[spawn] write fd:{:?}", std_fds[0]));
         print_current_cycle();
 
-        // Create a 512KB buffer for writing
+        // Create a 256KB buffer for writing
         syscalls::debug(format!("write buffer size:{:?}", BUFFER_SIZE));
         let write_buffer = vec![1u8; BUFFER_SIZE];
         let write_result = syscalls::write(std_fds[0], &write_buffer).unwrap();
@@ -72,7 +72,7 @@ pub fn program_entry() -> i8 {
     print_current_cycle();
     syscalls::debug(format!("spawn result:{:?}", spawn_result1));
 
-    // Create a 512KB buffer for reading
+    // Create a 256KB buffer for reading
     let mut read_buffer = vec![0u8; BUFFER_SIZE];
     print_current_cycle();
     let read_result = syscalls::read(r0, &mut read_buffer).unwrap();
@@ -105,7 +105,7 @@ pub fn program_entry() -> i8 {
     print_current_cycle();
     syscalls::debug(format!("SpawnArgs.process_id:{:?}", pid));
     assert_eq!(pid, 1);
-    return 0;
+    return 0;  
 }
 
 fn print_current_cycle() {
