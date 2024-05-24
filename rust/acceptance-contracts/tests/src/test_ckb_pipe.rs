@@ -95,7 +95,7 @@ fn test_read_write_max_data(){
 fn test_pipe_close_when_spawn_stop(){
     // xyl
     // 一次性读写比较大的buffer
-    let name = "ckb_pipe";
+    let name = "ckb_spawn_exited_fd_close";
     let cycle = 1000_000_000;
     let mut context = Context::default();
     let contract_bin: Bytes = Loader::default().load_binary(name);
@@ -148,9 +148,9 @@ fn test_pipe_close_when_spawn_stop(){
     }
     Err(err) => {
         let error_message = format!("{:?}", err);
-        assert!(error_message.contains("ValidationFailure") && error_message.contains("-1"), 
+        assert!(error_message.contains("Failed to read: OtherEndClosed"),
                 "Unexpected error: {:?}", error_message);
-        println!("Caught expected error: ValidationFailure with code -1");
+        println!("Caught expected error: Failed to read: OtherEndClosed");
         return;
     }
     }

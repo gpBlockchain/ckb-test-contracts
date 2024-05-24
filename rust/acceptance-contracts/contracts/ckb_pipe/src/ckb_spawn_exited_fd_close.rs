@@ -96,9 +96,11 @@ pub fn program_entry() -> i8 {
             syscalls::debug(format!("Read {} bytes successfully.", read_result));
             assert_eq!(read_buffer[..4], [1, 1, 1, 1]); // Check the first 4 bytes
         },
+        //https://github.com/nervosnetwork/ckb-std/blob/56c7541b38814089c46830d7ccb53450febfe9ac/src/error.rs#L21
         Err(err) => {
             let error_message = format!("Failed to read: {:?}", err);
             syscalls::debug(format!("Caught error: {:?}", error_message));
+            assert_eq!(error_message, "Failed to read: OtherEndClosed");
         }
     }
     syscalls::debug(format!("read result:{:?}", read_result));
