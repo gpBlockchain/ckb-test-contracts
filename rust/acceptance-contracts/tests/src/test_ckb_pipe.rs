@@ -94,7 +94,6 @@ fn test_read_write_max_data(){
 #[test]
 fn test_pipe_close_when_spawn_stop(){
     // xyl
-    // 一次性读写比较大的buffer
     let name = "ckb_spawn_exited_fd_close";
     let cycle = 1000_000_000;
     let mut context = Context::default();
