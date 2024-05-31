@@ -27,8 +27,7 @@ fn assert_script_error(err: Error, err_code: i8) {
 
 #[test]
 fn test_read_write_max_data(){
-    // xyl
-    // 一次性读写比较大的buffer
+    // write or read large buffer outofrangge heap used
     let name = "ckb_pipe";
     let cycle = 1000_000_000;
     let mut context = Context::default();
@@ -93,7 +92,7 @@ fn test_read_write_max_data(){
 
 #[test]
 fn test_pipe_close_when_spawn_stop(){
-    // xyl
+    // check when spawn process stop, fd will be closed
     let name = "ckb_spawn_exited_fd_close";
     let cycle = 1000_000_000;
     let mut context = Context::default();

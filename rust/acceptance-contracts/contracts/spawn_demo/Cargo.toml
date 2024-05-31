@@ -29,3 +29,31 @@ path = "src/spawn_place_is_out_of_range.rs"
 [[bin]]
 name = "spawn_place_is_witness"
 path = "src/spawn_place_is_witness.rs"
+
+[[bin]]
+name = "spawn_invaild_index"
+path = "src/spawn_invaild_index.rs"
+
+[[bin]]
+name = "spawn_argc_is_large"
+path = "src/spawn_argc_is_large.rs"
+
+[[bin]]
+name = "spawn_inherited_fds_end_is_not_0"
+path = "src/spawn_inherited_fds_end_is_not_0.rs"
+
+[[bin]]
+name = "spawn_inherited_fds_0_is_in_mid"
+path = "src/spawn_inherited_fds_0_is_in_mid.rs"
+
+[[bin]]
+name = "spawn_inherited_fds_not_exist_fd"
+path = "src/spawn_inherited_fds_not_exist_fd.rs"
+
+[[bin]]
+name = "spawn_inherited_fds_contains_closed_fd"
+path = "src/spawn_inherited_fds_contains_closed_fd.rs"
+
+[[bin]]
+name = "spawn_inherited_fds_not_exist"
+path = "src/spawn_inherited_fds_not_exist.rs"

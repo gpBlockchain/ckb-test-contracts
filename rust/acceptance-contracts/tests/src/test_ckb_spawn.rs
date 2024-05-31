@@ -64,8 +64,60 @@ fn test_source_is_input_cell() {
 
 #[test]
 fn test_index_is_out_of_range() {
-    // xyl
     // 调用的index 不存在
+    let name = "spawn_invaild_index";
+    let cycle = 1000_000_000;
+    let mut context = Context::default();
+    let contract_bin: Bytes = Loader::default().load_binary(name);
+    let out_point = context.deploy_cell(contract_bin.clone());
+
+    // prepare headers
+    let h1 = Header::new_builder()
+        .raw(RawHeader::new_builder().number(1u64.pack()).build())
+        .build()
+        .into_view();
+    context.insert_header(h1.clone());
+    context.link_cell_with_block(out_point.clone(), h1.hash(), 0);
+    // 不加
+    context.block_extensions.insert(h1.hash(), Bytes::from_static(&[1, 2, 3]));
+
+    // prepare scripts
+    let lock_script = context
+        .build_script_with_hash_type(&out_point, ScriptHashType::Data2, Bytes::from(vec![42]))
+        .expect("script");
+
+    // prepare input  cells with contract bin
+    let input_out_point = context.create_cell(
+        CellOutput::new_builder()
+            .capacity(1000u64.pack())
+            .lock(lock_script.clone())
+            .build(),
+        Bytes::new(),
+    );
+
+    // build transaction
+    let tx = TransactionBuilder::default()
+        .inputs(vec![CellInput::new_builder()
+            .previous_output(input_out_point)
+            .build()])
+        .outputs(vec![
+            CellOutput::new_builder()
+                .capacity(1000u64.pack())
+                .lock(lock_script.clone())
+                .build()
+        ])
+        .outputs_data(vec![Bytes::new(); 1].pack())
+        .header_dep(h1.hash())
+        .witness(contract_bin.pack())
+        // .cell_deps(out_point.clone())
+        .build();
+    let tx = context.complete_tx(tx);
+
+    // run
+    let cycles = context
+        .verify_tx(&tx, cycle)
+        .expect("pass verification");
+    println!("test_success: consume cycles: {}", cycles);
 }
 
 #[test]
@@ -261,21 +313,173 @@ fn test_bounds_is_out_of_range() {
 }
 
 #[test]
+#[should_panic(expected = "MemOutOfBound")]
 fn test_spawn_args_argc_is_very_large() {
-    //xyl
     // spawn调用 args 特别大
+    let name = "spawn_argc_is_large";
+    let cycle = 1000_000_000;
+    let mut context = Context::default();
+    let contract_bin: Bytes = Loader::default().load_binary(name);
+    let out_point = context.deploy_cell(contract_bin.clone());
+
+    // prepare headers
+    let h1 = Header::new_builder()
+        .raw(RawHeader::new_builder().number(1u64.pack()).build())
+        .build()
+        .into_view();
+    context.insert_header(h1.clone());
+    context.link_cell_with_block(out_point.clone(), h1.hash(), 0);
+    // 不加
+    context.block_extensions.insert(h1.hash(), Bytes::from_static(&[1, 2, 3]));
+
+    // prepare scripts
+    let lock_script = context
+        .build_script_with_hash_type(&out_point, ScriptHashType::Data2, Bytes::from(vec![42]))
+        .expect("script");
+
+    // prepare input  cells with contract bin
+    let input_out_point = context.create_cell(
+        CellOutput::new_builder()
+            .capacity(1000u64.pack())
+            .lock(lock_script.clone())
+            .build(),
+        Bytes::new(),
+    );
+
+    // build transaction
+    let tx = TransactionBuilder::default()
+        .inputs(vec![CellInput::new_builder()
+            .previous_output(input_out_point)
+            .build()])
+        .outputs(vec![
+            CellOutput::new_builder()
+                .capacity(1000u64.pack())
+                .lock(lock_script.clone())
+                .build()
+        ])
+        .outputs_data(vec![Bytes::new(); 1].pack())
+        .header_dep(h1.hash())
+        .witness(contract_bin.pack())
+        // .cell_deps(out_point.clone())
+        .build();
+    let tx = context.complete_tx(tx);
+
+    // run
+    let cycles = context
+        .verify_tx(&tx, cycle)
+        .expect("MemOutOfBound");
 }
 
 #[test]
 fn test_spawn_inherited_fds_end_is_not_0() {
-    // xyl
-    // fds 不为0
+    // fds 不为0, return InvalidFd
+    let name = "spawn_inherited_fds_end_is_not_0";
+    let cycle = 1000_000_000;
+    let mut context = Context::default();
+    let contract_bin: Bytes = Loader::default().load_binary(name);
+    let out_point = context.deploy_cell(contract_bin.clone());
+
+    // prepare headers
+    let h1 = Header::new_builder()
+        .raw(RawHeader::new_builder().number(1u64.pack()).build())
+        .build()
+        .into_view();
+    context.insert_header(h1.clone());
+    context.link_cell_with_block(out_point.clone(), h1.hash(), 0);
+    // 不加
+    context.block_extensions.insert(h1.hash(), Bytes::from_static(&[1, 2, 3]));
+
+    // prepare scripts
+    let lock_script = context
+        .build_script_with_hash_type(&out_point, ScriptHashType::Data2, Bytes::from(vec![42]))
+        .expect("script");
+
+    // prepare input  cells with contract bin
+    let input_out_point = context.create_cell(
+        CellOutput::new_builder()
+            .capacity(1000u64.pack())
+            .lock(lock_script.clone())
+            .build(),
+        Bytes::new(),
+    );
+
+    // build transaction
+    let tx = TransactionBuilder::default()
+        .inputs(vec![CellInput::new_builder()
+            .previous_output(input_out_point)
+            .build()])
+        .outputs(vec![
+            CellOutput::new_builder()
+                .capacity(1000u64.pack())
+                .lock(lock_script.clone())
+                .build()
+        ])
+        .outputs_data(vec![Bytes::new(); 1].pack())
+        .header_dep(h1.hash())
+        .witness(contract_bin.pack())
+        // .cell_deps(out_point.clone())
+        .build();
+    let tx = context.complete_tx(tx);
+
+    // run
+    let cycles = context
+        .verify_tx(&tx, cycle);
 }
 
 #[test]
 fn test_spawn_inherited_fds_0_is_in_mid() {
-    // xyl
-    // fds 0在中间位置
+    // fds 0在中间位置，预期应该返回invalid Fd，但实际返回成功
+    let name = "spawn_inherited_fds_0_is_in_mid";
+    let cycle = 1000_000_000;
+    let mut context = Context::default();
+    let contract_bin: Bytes = Loader::default().load_binary(name);
+    let out_point = context.deploy_cell(contract_bin.clone());
+
+    // prepare headers
+    let h1 = Header::new_builder()
+        .raw(RawHeader::new_builder().number(1u64.pack()).build())
+        .build()
+        .into_view();
+    context.insert_header(h1.clone());
+    context.link_cell_with_block(out_point.clone(), h1.hash(), 0);
+    // 不加
+    context.block_extensions.insert(h1.hash(), Bytes::from_static(&[1, 2, 3]));
+
+    // prepare scripts
+    let lock_script = context
+        .build_script_with_hash_type(&out_point, ScriptHashType::Data2, Bytes::from(vec![42]))
+        .expect("script");
+
+    // prepare input  cells with contract bin
+    let input_out_point = context.create_cell(
+        CellOutput::new_builder()
+            .capacity(1000u64.pack())
+            .lock(lock_script.clone())
+            .build(),
+        Bytes::new(),
+    );
+
+    // build transaction
+    let tx = TransactionBuilder::default()
+        .inputs(vec![CellInput::new_builder()
+            .previous_output(input_out_point)
+            .build()])
+        .outputs(vec![
+            CellOutput::new_builder()
+                .capacity(1000u64.pack())
+                .lock(lock_script.clone())
+                .build()
+        ])
+        .outputs_data(vec![Bytes::new(); 1].pack())
+        .header_dep(h1.hash())
+        .witness(contract_bin.pack())
+        // .cell_deps(out_point.clone())
+        .build();
+    let tx = context.complete_tx(tx);
+
+    // run
+    let cycles = context
+        .verify_tx(&tx, cycle);
 }
 
 #[test]
@@ -288,16 +492,171 @@ fn test_spawn_inherited_fds_exist_repeated_fd() {
 
 #[test]
 fn test_spawn_inherited_fds_not_exist_fd() {
-    // xyl
     // 不存在的fd
+    let name = "spawn_inherited_fds_not_exist_fd";
+    let cycle = 1000_000_000;
+    let mut context = Context::default();
+    let contract_bin: Bytes = Loader::default().load_binary(name);
+    let out_point = context.deploy_cell(contract_bin.clone());
+
+    // prepare headers
+    let h1 = Header::new_builder()
+        .raw(RawHeader::new_builder().number(1u64.pack()).build())
+        .build()
+        .into_view();
+    context.insert_header(h1.clone());
+    context.link_cell_with_block(out_point.clone(), h1.hash(), 0);
+    // 不加
+    context.block_extensions.insert(h1.hash(), Bytes::from_static(&[1, 2, 3]));
+
+    // prepare scripts
+    let lock_script = context
+        .build_script_with_hash_type(&out_point, ScriptHashType::Data2, Bytes::from(vec![42]))
+        .expect("script");
+
+    // prepare input  cells with contract bin
+    let input_out_point = context.create_cell(
+        CellOutput::new_builder()
+            .capacity(1000u64.pack())
+            .lock(lock_script.clone())
+            .build(),
+        Bytes::new(),
+    );
+
+    // build transaction
+    let tx = TransactionBuilder::default()
+        .inputs(vec![CellInput::new_builder()
+            .previous_output(input_out_point)
+            .build()])
+        .outputs(vec![
+            CellOutput::new_builder()
+                .capacity(1000u64.pack())
+                .lock(lock_script.clone())
+                .build()
+        ])
+        .outputs_data(vec![Bytes::new(); 1].pack())
+        .header_dep(h1.hash())
+        .witness(contract_bin.pack())
+        // .cell_deps(out_point.clone())
+        .build();
+    let tx = context.complete_tx(tx);
+
+    // run
+    let cycles = context
+        .verify_tx(&tx, cycle);
 }
 
 #[test]
 fn test_spawn_inherited_fds_contains_closed_fd() {
-    // xyl
     // 关闭的fd
+    let name = "spawn_inherited_fds_contains_closed_fd";
+    let cycle = 1000_000_000;
+    let mut context = Context::default();
+    let contract_bin: Bytes = Loader::default().load_binary(name);
+    let out_point = context.deploy_cell(contract_bin.clone());
+
+    // prepare headers
+    let h1 = Header::new_builder()
+        .raw(RawHeader::new_builder().number(1u64.pack()).build())
+        .build()
+        .into_view();
+    context.insert_header(h1.clone());
+    context.link_cell_with_block(out_point.clone(), h1.hash(), 0);
+    // 不加
+    context.block_extensions.insert(h1.hash(), Bytes::from_static(&[1, 2, 3]));
+
+    // prepare scripts
+    let lock_script = context
+        .build_script_with_hash_type(&out_point, ScriptHashType::Data2, Bytes::from(vec![42]))
+        .expect("script");
+
+    // prepare input  cells with contract bin
+    let input_out_point = context.create_cell(
+        CellOutput::new_builder()
+            .capacity(1000u64.pack())
+            .lock(lock_script.clone())
+            .build(),
+        Bytes::new(),
+    );
+
+    // build transaction
+    let tx = TransactionBuilder::default()
+        .inputs(vec![CellInput::new_builder()
+            .previous_output(input_out_point)
+            .build()])
+        .outputs(vec![
+            CellOutput::new_builder()
+                .capacity(1000u64.pack())
+                .lock(lock_script.clone())
+                .build()
+        ])
+        .outputs_data(vec![Bytes::new(); 1].pack())
+        .header_dep(h1.hash())
+        .witness(contract_bin.pack())
+        // .cell_deps(out_point.clone())
+        .build();
+    let tx = context.complete_tx(tx);
+
+    // run
+    let cycles = context
+        .verify_tx(&tx, cycle);
 }
 
+#[test]
+fn test_spawn_inherited_fds_not_exist() {
+    //check [0, 1] fds == 不传入fd值
+    let name = "spawn_inherited_fds_not_exist";
+    let cycle = 1000_000_000;
+    let mut context = Context::default();
+    let contract_bin: Bytes = Loader::default().load_binary(name);
+    let out_point = context.deploy_cell(contract_bin.clone());
+
+    // prepare headers
+    let h1 = Header::new_builder()
+        .raw(RawHeader::new_builder().number(1u64.pack()).build())
+        .build()
+        .into_view();
+    context.insert_header(h1.clone());
+    context.link_cell_with_block(out_point.clone(), h1.hash(), 0);
+    // 不加
+    context.block_extensions.insert(h1.hash(), Bytes::from_static(&[1, 2, 3]));
+
+    // prepare scripts
+    let lock_script = context
+        .build_script_with_hash_type(&out_point, ScriptHashType::Data2, Bytes::from(vec![42]))
+        .expect("script");
+
+    // prepare input  cells with contract bin
+    let input_out_point = context.create_cell(
+        CellOutput::new_builder()
+            .capacity(1000u64.pack())
+            .lock(lock_script.clone())
+            .build(),
+        Bytes::new(),
+    );
+
+    // build transaction
+    let tx = TransactionBuilder::default()
+        .inputs(vec![CellInput::new_builder()
+            .previous_output(input_out_point)
+            .build()])
+        .outputs(vec![
+            CellOutput::new_builder()
+                .capacity(1000u64.pack())
+                .lock(lock_script.clone())
+                .build()
+        ])
+        .outputs_data(vec![Bytes::new(); 1].pack())
+        .header_dep(h1.hash())
+        .witness(contract_bin.pack())
+        // .cell_deps(out_point.clone())
+        .build();
+    let tx = context.complete_tx(tx);
+
+    // run
+    let cycles = context
+        .verify_tx(&tx, cycle);
+}
 #[test]
 fn test_spawn_16_run_same_time() {
     // gp
