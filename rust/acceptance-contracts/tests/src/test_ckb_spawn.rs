@@ -483,14 +483,6 @@ fn test_spawn_inherited_fds_0_is_in_mid() {
 }
 
 #[test]
-fn test_spawn_inherited_fds_exist_repeated_fd() {
-    // xyl
-    // 存在重复的fd
-    // 检查重复的fd是否都可以使用
-    // 如果都能使用检查将其中一个fd传递出去，这时候2个fd会怎么样
-}
-
-#[test]
 fn test_spawn_inherited_fds_not_exist_fd() {
     // 不存在的fd
     let name = "spawn_inherited_fds_not_exist_fd";
@@ -673,23 +665,10 @@ fn test_spawn_stop_16_spawn_create_17_spawn() {
     // gp
 }
 
-
-#[test]
-fn test_spawn_out_of_memory() {
-    // xyl
-    // spawn 里调用new buffer
-}
-
 #[test]
 fn test_spawn_invoke_block_opcode() {
     // gp
     // 调用一系列opcode
-}
-
-#[test]
-fn test_spawn_read_contract_is_bad() {
-    // xyl
-    // 合约不符合规范
 }
 
 #[test]
