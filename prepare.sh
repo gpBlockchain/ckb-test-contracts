@@ -2,9 +2,9 @@ echo "get capsule "
 rustup update stable
 cargo install cross --git https://github.com/cross-rs/cross
 cargo install ckb-capsule --git https://github.com/nervosnetwork/capsule.git --branch develop
-echo "build rust contract"
-cd rust/acceptance-contracts
-capsule build
+# echo "build rust contract"
+# cd rust/acceptance-contracts
+# capsule build
 #echo "build c contract "
 #cd ../../
 #cd c
