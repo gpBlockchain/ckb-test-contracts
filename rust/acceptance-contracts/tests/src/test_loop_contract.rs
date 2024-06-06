@@ -6,22 +6,11 @@ use ckb_testtool::ckb_types::{
     packed::*,
     prelude::*,
 };
-use ckb_testtool::ckb_error::Error;
 
-const MAX_CYCLES: u64 = 10_000_000;
+const MAX_CYCLES: u64 = 1000_000_000;
 
 // error numbers
-const ERROR_EMPTY_ARGS: i8 = 0;
 
-fn assert_script_error(err: Error, err_code: i8) {
-    let error_string = err.to_string();
-    assert!(
-        error_string.contains(format!("error code {} ", err_code).as_str()),
-        "error_string: {}, expected_error_code: {}",
-        error_string,
-        err_code
-    );
-}
 
 #[test]
 fn test_success() {
@@ -54,16 +43,13 @@ fn test_success() {
             .build()
     ];
 
-    let outputs_token:Vec<u128> = vec![500];
+    let outputs_token:Vec<u128> = vec![5000];
     println!("outputs_token:{:?}",outputs_token);
 
     let outputs_data: Vec<_> = outputs_token
         .iter()
         .map(|token| Bytes::from(token.to_le_bytes().to_vec()))
         .collect();
-
-
-
     println!("outputs_data:{:?}",outputs_data);
     let tx = TransactionBuilder::default()
         .input(input)

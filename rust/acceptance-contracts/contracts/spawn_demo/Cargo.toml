@@ -7,6 +7,7 @@ edition = "2021"
 
 [dependencies]
 ckb-std = { git = "https://github.com/nervosnetwork/ckb-std.git", branch = "master", features = ["ckb2023"] }
+log = "0.4.21"
 
 
 [[bin]]
@@ -29,3 +30,58 @@ path = "src/spawn_place_is_out_of_range.rs"
 [[bin]]
 name = "spawn_place_is_witness"
 path = "src/spawn_place_is_witness.rs"
+
+
+[[bin]]
+name = "spawn_16_run_same_time"
+path = "src/spawn_16_run_same_time.rs"
+
+
+[[bin]]
+name = "spawn_create_17_spawn"
+path = "src/spawn_create_17_spawn.rs"
+
+[[bin]]
+name = "spawn_stop_16_spawn_create_17_spawn"
+path = "src/spawn_stop_16_spawn_create_17_spawn.rs"
+
+[[bin]]
+name = "spawn_loop_times"
+path = "src/spawn_loop_times.rs"
+
+[[bin]]
+name = "spawn_recursion_times"
+path = "src/spawn_recursion_times.rs"
+
+[[bin]]
+name = "spawn_cycle_inc_when_contains_recursion_and_loop_spawn"
+path = "src/spawn_cycle_inc_when_contains_recursion_and_loop_spawn.rs"
+
+[[bin]]
+name = "spawn_can_stop_when_son_spawn_pause"
+path = "src/spawn_can_stop_when_son_spawn_pause.rs"
+
+[[bin]]
+name = "spawn_with_exec"
+path = "src/spawn_with_exec.rs"
+
+
+[[bin]]
+name = "spawn_loop_times_max"
+path = "src/spawn_loop_times_max.rs"
+
+[[bin]]
+name = "ckb_spawn_for"
+path = "src/ckb_spawn_for.rs"
+
+[[bin]]
+name = "spawn_bounds_is_out_of_range"
+path = "src/spawn_bounds_is_out_of_range.rs"
+
+[[bin]]
+name = "spawn_bounds_is_not_0"
+path = "src/spawn_bounds_is_not_0.rs"
+
+[[bin]]
+name = "spawn_invoke_block_opcode"
+path = "src/spawn_invoke_block_opcode.rs"

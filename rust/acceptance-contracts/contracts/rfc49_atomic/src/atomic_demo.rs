@@ -12,10 +12,8 @@ ckb_std::entry!(program_entry);
 default_alloc!();
 
 
-use core::result::Result;
 
 use ckb_std::{debug};
-use ckb_std::env::argv;
 use core::sync::atomic::{AtomicBool, AtomicI32, Ordering};
 
 ///
@@ -54,3 +52,7 @@ pub fn program_entry() -> i8 {
 
     return 0;
 }
+
+
+#[test]
+fn test_011(){}

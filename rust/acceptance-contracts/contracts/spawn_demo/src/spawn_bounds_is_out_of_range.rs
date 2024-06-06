@@ -28,21 +28,7 @@ pub fn program_entry() -> i8 {
     let argvs = argv();
     print_current_cycle();
     if argvs.len() != 0 {
-        print_current_cycle();
-        // spawn callee
-        let process_id = syscalls::process_id();
-        syscalls::debug(format!("[spawn] process_id:{:?}", process_id));
-        assert_eq!(process_id, 1);
-        syscalls::debug(format!("[spawn]argvs:{:?}", argvs));
-        // assert_eq!(argvs, ["hello", "world"]);
-        let mut std_fds: [u64; 1] = [0];
-        syscalls::inherited_file_descriptors(&mut std_fds);
-        syscalls::debug(format!("[spawn] write fd:{:?}", std_fds[0]));
-        print_current_cycle();
-        let write_result = syscalls::write(std_fds[0], &[1u8, 1u8, 1u8, 1u8]).unwrap();
-        print_current_cycle();
-        syscalls::debug(format!("[spawn] write result:{:?}", write_result));
-        assert_eq!(write_result, 4);
+        syscalls::debug("---spawn ---".to_string());
         return 25i8;
     }
 
@@ -56,10 +42,8 @@ pub fn program_entry() -> i8 {
         argv
     };
 
-    let mut son_fds: [u64; 2] = [0, 0];
+    let mut son_fds: [u64; 1] = [ 0];
     print_current_cycle();
-    let (r0, w0) = syscalls::pipe().unwrap();
-    son_fds[0] = w0;
     let mut pid: u64 = 0;
     let mut spgs = syscalls::SpawnArgs {
         argc: argc,
@@ -68,12 +52,16 @@ pub fn program_entry() -> i8 {
         inherited_fds: son_fds.as_ptr(),
     };
     print_current_cycle();
-    match syscalls::spawn(0, Source::CellDep, 2, 0, &mut spgs) {
-        Ok(ok) => {
+    let l = 99999999999u64;
+    let h = 3 << 32;
+    let bounds = h | l;
+    syscalls::debug(format!("bounds :{:?}", bounds));
+    match syscalls::spawn(0, Source::CellDep, 2, bounds as usize, &mut spgs) {
+        Ok(_) => {
             assert!(false, "place is 2,should failed");
         }
         Err(err) => {
-            syscalls::debug(format!("err:{:?}", err));
+            syscalls::debug(format!("spawn_place_is_out_of_range err:{:?}", err));
             assert_eq!(err,SysError::IndexOutOfBound);
         }
     };
