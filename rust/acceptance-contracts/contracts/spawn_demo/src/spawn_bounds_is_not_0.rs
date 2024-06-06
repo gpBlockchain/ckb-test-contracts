@@ -4,6 +4,7 @@
 #[cfg(test)]
 extern crate alloc;
 
+use alloc::fmt::format;
 use alloc::format;
 use alloc::string::ToString;
 #[cfg(not(test))]
@@ -19,8 +20,10 @@ use core::ffi::CStr;
 
 use ckb_std::{syscalls};
 use ckb_std::ckb_constants::Source;
+use ckb_std::ckb_constants::Source::CellDep;
 use ckb_std::env::argv;
 use ckb_std::error::SysError;
+use ckb_std::high_level::load_cell_data;
 use ckb_std::syscalls::{current_cycles};
 
 pub fn program_entry() -> i8 {
@@ -28,21 +31,7 @@ pub fn program_entry() -> i8 {
     let argvs = argv();
     print_current_cycle();
     if argvs.len() != 0 {
-        print_current_cycle();
-        // spawn callee
-        let process_id = syscalls::process_id();
-        syscalls::debug(format!("[spawn] process_id:{:?}", process_id));
-        assert_eq!(process_id, 1);
-        syscalls::debug(format!("[spawn]argvs:{:?}", argvs));
-        // assert_eq!(argvs, ["hello", "world"]);
-        let mut std_fds: [u64; 1] = [0];
-        syscalls::inherited_file_descriptors(&mut std_fds);
-        syscalls::debug(format!("[spawn] write fd:{:?}", std_fds[0]));
-        print_current_cycle();
-        let write_result = syscalls::write(std_fds[0], &[1u8, 1u8, 1u8, 1u8]).unwrap();
-        print_current_cycle();
-        syscalls::debug(format!("[spawn] write result:{:?}", write_result));
-        assert_eq!(write_result, 4);
+        syscalls::debug("---spawn ---".to_string());
         return 25i8;
     }
 
@@ -56,27 +45,26 @@ pub fn program_entry() -> i8 {
         argv
     };
 
-    let mut child_fds: [u64; 2] = [0, 0];
+    let mut son_fds: [u64; 1] = [0];
     print_current_cycle();
-    let (r0, w0) = syscalls::pipe().unwrap();
-    child_fds[0] = w0;
     let mut pid: u64 = 0;
     let mut spgs = syscalls::SpawnArgs {
         argc: argc,
         argv: argv.as_ptr(),
         process_id: &mut pid as *mut u64,
-        inherited_fds: child_fds.as_ptr(),
+        inherited_fds: son_fds.as_ptr(),
     };
     print_current_cycle();
-    match syscalls::spawn(0, Source::CellDep, 2, 0, &mut spgs) {
-        Ok(ok) => {
-            assert!(false, "place is 2,should failed");
-        }
-        Err(err) => {
-            syscalls::debug(format!("err:{:?}", err));
-            assert_eq!(err,SysError::IndexOutOfBound);
-        }
-    };
+    let data = load_cell_data(0, CellDep).unwrap();
+    syscalls::debug(format!("load_cell_data len::{:?}", data.len()));
+    let l = data.len() as u64;
+    let h = 0 << 32;
+
+    let bounds = h | l;
+    syscalls::debug(format!("bounds :{:?}", bounds));
+    let ret = syscalls::spawn(0, Source::CellDep, 0, bounds as usize, &mut spgs).unwrap();
+    let pid = syscalls::wait(ret).unwrap();
+    assert_eq!(pid,25i8);
     return 0;
 }
 

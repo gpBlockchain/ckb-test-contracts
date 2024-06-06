@@ -6,23 +6,11 @@ use ckb_testtool::ckb_types::{
     packed::*,
     prelude::*,
 };
-use ckb_testtool::ckb_error::Error;
 use ckb_testtool::ckb_types::core::{ScriptHashType};
 use crate::prelude::ContextExt;
 
 const MAX_CYCLES: u64 = 1000_000_000;
 // error numbers
-const ERROR_EMPTY_ARGS: i8 = 0;
-
-fn assert_script_error(err: Error, err_code: i8) {
-    let error_string = err.to_string();
-    assert!(
-        error_string.contains(format!("error code {} ", err_code).as_str()),
-        "error_string: {}, expected_error_code: {}",
-        error_string,
-        err_code
-    );
-}
 
 
 #[test]
@@ -95,12 +83,17 @@ fn test_spawn_demo() {
     test_contract_by_name("spawn_demo")
 }
 
+#[test]
+fn test_spawn_16_run_same_time() {
+    test_contract_by_name("spawn_16_run_same_time")
+}
 
-fn test_contract_by_name(name: &str) {
+
+pub(crate) fn test_contract_by_name(name: &str) {
     test_contract_by_name_with_cycle(name, MAX_CYCLES);
 }
 
-fn test_contract_by_name_with_cycle(name: &str, cycle: u64) {
+pub fn test_contract_by_name_with_cycle(name: &str, cycle: u64) {
     let mut context = Context::default();
     let contract_bin: Bytes = Loader::default().load_binary(name);
     let out_point = context.deploy_cell(contract_bin.clone());

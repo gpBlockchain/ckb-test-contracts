@@ -27,7 +27,7 @@ pub fn program_entry() -> i8 {
         Ok(header) => {
             debug!("header:{:?}",header);
         }
-        Err(err) => {
+        Err(_) => {
             return 2;
         }
     };

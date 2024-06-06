@@ -6,12 +6,20 @@ use ckb_testtool::context::Context;
 use crate::Loader;
 use crate::prelude::ContextExt;
 
+
+/// build tx:
+///     1. cellDep: spawn_source_is_input_cell(code)
+///     2. input: code_hash:(spawn_source_is_input_cell) ,data: spawn_source_is_input_cell(code)
+///     3. output: code_hash:(spawn_source_is_input_cell)
+///     4. should pass
 #[test]
 fn test_source_is_input_cell() {
     let name = "spawn_source_is_input_cell";
     let cycle = 1000_000_000;
     let mut context = Context::default();
     let contract_bin: Bytes = Loader::default().load_binary(name);
+
+    // 1. cellDep: spawn_source_is_input_cell(code)
     let out_point = context.deploy_cell(contract_bin.clone());
 
     // prepare headers
@@ -24,6 +32,7 @@ fn test_source_is_input_cell() {
     // 不加
     context.block_extensions.insert(h1.hash(), Bytes::from_static(&[1, 2, 3]));
 
+    // 2. input: code_hash:(spawn_source_is_input_cell) ,data: spawn_source_is_input_cell(code)
     // prepare scripts
     let lock_script = context
         .build_script_with_hash_type(&out_point, ScriptHashType::Data2, Bytes::from(vec![42]))
@@ -43,6 +52,7 @@ fn test_source_is_input_cell() {
         .inputs(vec![CellInput::new_builder()
             .previous_output(input_out_point)
             .build()])
+        //     3. output: code_hash:(spawn_source_is_input_cell)
         .outputs(vec![
             CellOutput::new_builder()
                 .capacity(1000u64.pack())
@@ -55,6 +65,7 @@ fn test_source_is_input_cell() {
         .build();
     let tx = context.complete_tx(tx);
 
+    // 4. should pass
     // run
     let cycles = context
         .verify_tx(&tx, cycle)
@@ -120,10 +131,18 @@ fn test_index_is_out_of_range() {
     println!("test_success: consume cycles: {}", cycles);
 }
 
+
+/// build tx:
+///     1. cellDep: spawn_source_is_output_cell(code)
+///     2. input: code_hash:(spawn_source_is_output_cell)
+///     3. output: code_hash:(spawn_source_is_output_cell),data:spawn_source_is_output_cell(code)
+///     4. should pass
 #[test]
 fn test_source_is_output_cell() {
     let name = "spawn_source_is_output_cell";
     let cycle = 1000_000_000;
+
+    // 1. cellDep: spawn_source_is_output_cell(code)
     let mut context = Context::default();
     let contract_bin: Bytes = Loader::default().load_binary(name);
     let out_point = context.deploy_cell(contract_bin.clone());
@@ -143,6 +162,7 @@ fn test_source_is_output_cell() {
         .build_script_with_hash_type(&out_point, ScriptHashType::Data2, Bytes::from(vec![42]))
         .expect("script");
 
+    // 2. input: code_hash:(spawn_source_is_output_cell)
     // prepare input  cells with contract bin
     let input_out_point = context.create_cell(
         CellOutput::new_builder()
@@ -157,6 +177,7 @@ fn test_source_is_output_cell() {
         .inputs(vec![CellInput::new_builder()
             .previous_output(input_out_point)
             .build()])
+        // 3. output: code_hash:(spawn_source_is_output_cell),data:spawn_source_is_output_cell(code)
         .outputs(vec![
             CellOutput::new_builder()
                 .capacity(1000u64.pack())
@@ -169,6 +190,7 @@ fn test_source_is_output_cell() {
         .build();
     let tx = context.complete_tx(tx);
 
+    // 4. should pass
     // run
     let cycles = context
         .verify_tx(&tx, cycle)
@@ -176,13 +198,20 @@ fn test_source_is_output_cell() {
     println!("test_success: consume cycles: {}", cycles);
 }
 
+/// build tx:
+///     1. cellDep: spawn_source_is_output_cell(code)
+///     2. input: code_hash:(spawn_source_is_output_cell)
+///     3. output: code_hash:(spawn_source_is_output_cell)
+///     4. witness: [spawn_source_is_output_cell(code)]
+///     5. should pass
 #[test]
 fn test_place_is_witness() {
-
     let name = "spawn_place_is_witness";
     let cycle = 1000_000_000;
     let mut context = Context::default();
     let contract_bin: Bytes = Loader::default().load_binary(name);
+
+    // 1. cellDep: spawn_source_is_output_cell(code)
     let out_point = context.deploy_cell(contract_bin.clone());
 
     // prepare headers
@@ -200,6 +229,7 @@ fn test_place_is_witness() {
         .build_script_with_hash_type(&out_point, ScriptHashType::Data2, Bytes::from(vec![42]))
         .expect("script");
 
+    // 1. cellDep: spawn_source_is_output_cell(code)
     // prepare input  cells with contract bin
     let input_out_point = context.create_cell(
         CellOutput::new_builder()
@@ -214,6 +244,7 @@ fn test_place_is_witness() {
         .inputs(vec![CellInput::new_builder()
             .previous_output(input_out_point)
             .build()])
+        // 3. output: code_hash:(spawn_source_is_output_cell)
         .outputs(vec![
             CellOutput::new_builder()
                 .capacity(1000u64.pack())
@@ -222,11 +253,13 @@ fn test_place_is_witness() {
         ])
         .outputs_data(vec![Bytes::new(); 1].pack())
         .header_dep(h1.hash())
+        // 4. witness: [spawn_source_is_output_cell(code)]
         .witness(contract_bin.pack())
         // .cell_deps(out_point.clone())
         .build();
     let tx = context.complete_tx(tx);
 
+    // 5. should pass
     // run
     let cycles = context
         .should_be_passed(&tx, cycle)
@@ -234,13 +267,21 @@ fn test_place_is_witness() {
     println!("test_success: consume cycles: {}", cycles);
 }
 
+
+/// build tx:
+///     1. cellDep: spawn_source_is_output_cell(code)
+///     2. input: code_hash:(spawn_source_is_output_cell)
+///     3. output: code_hash:(spawn_source_is_output_cell)
+///     4. should pass
 #[test]
-fn test_place_is_out_of_range(){
+fn test_place_is_out_of_range() {
     // spawn_place_is_out_of_range
     let name = "spawn_place_is_out_of_range";
     let cycle = 1000_000_000;
     let mut context = Context::default();
     let contract_bin: Bytes = Loader::default().load_binary(name);
+
+    // 1. cellDep: spawn_source_is_output_cell(code)
     let out_point = context.deploy_cell(contract_bin.clone());
 
     // prepare headers
@@ -258,6 +299,7 @@ fn test_place_is_out_of_range(){
         .build_script_with_hash_type(&out_point, ScriptHashType::Data2, Bytes::from(vec![42]))
         .expect("script");
 
+    // 2. input: code_hash:(spawn_source_is_output_cell)
     // prepare input  cells with contract bin
     let input_out_point = context.create_cell(
         CellOutput::new_builder()
@@ -272,6 +314,7 @@ fn test_place_is_out_of_range(){
         .inputs(vec![CellInput::new_builder()
             .previous_output(input_out_point)
             .build()])
+        // 3. output: code_hash:(spawn_source_is_output_cell)
         .outputs(vec![
             CellOutput::new_builder()
                 .capacity(1000u64.pack())
@@ -285,31 +328,23 @@ fn test_place_is_out_of_range(){
         .build();
     let tx = context.complete_tx(tx);
 
-    // run
+    // 4. should pass
     let cycles = context
         .verify_tx(&tx, cycle)
         .expect("pass verification");
     println!("test_success: consume cycles: {}", cycles);
 }
 
+/// ignore: debug code too big ,so load data will fail
 #[test]
+#[ignore]
 fn test_bounds_is_not_0() {
-    // gp
-    // spawn 调用 bounds
-    let name = "spawn_place_is_out_of_range";
-    let cycle = 1000_000_000;
-    let mut context = Context::default();
-    let contract_bin: Bytes = Loader::default().load_binary(name);
-    let l = contract_bin.len() as u64;
-    let h = 3 << 32;
-    let bounds = h | l;
-    println!("bounds:{:x},h:{:x},l:{:x}",bounds,h,l)
+    crate::test_contract_type::test_contract_by_name("spawn_bounds_is_not_0")
 }
 
 #[test]
 fn test_bounds_is_out_of_range() {
-    // gp
-    // bounds 超出边界
+    crate::test_contract_type::test_contract_by_name("spawn_bounds_is_out_of_range")
 }
 
 #[test]
@@ -651,46 +686,62 @@ fn test_spawn_inherited_fds_not_exist() {
 }
 #[test]
 fn test_spawn_16_run_same_time() {
-    // gp
-    //
+    crate::test_contract_type::test_contract_by_name("spawn_16_run_same_time")
 }
 
 #[test]
 fn test_spawn_create_17_spawn() {
-    // gp
+    crate::test_contract_type::test_contract_by_name("spawn_create_17_spawn")
 }
 
 #[test]
 fn test_spawn_stop_16_spawn_create_17_spawn() {
-    // gp
+    crate::test_contract_type::test_contract_by_name("spawn_stop_16_spawn_create_17_spawn")
+}
+
+
+#[test]
+fn test_ckb_spawn_for(){
+    crate::test_contract_type::test_contract_by_name("ckb_spawn_for")
+}
+
+#[test]
+fn test_spawn_out_of_memory() {
+    // xyl
+    // spawn 里调用new buffer
 }
 
 #[test]
 fn test_spawn_invoke_block_opcode() {
-    // gp
-    // 调用一系列opcode
+    crate::test_contract_type::test_contract_by_name("spawn_invoke_block_opcode");
 }
 
 #[test]
+fn test_spawn_read_contract_is_bad() {
+    // xyl
+    // 合约不符合规范
+}
+
+#[test]
+#[should_panic(expected = "ExceededMaximumCycles")]
 fn test_spawn_loop_times() {
-    // gp
-    // spawn 调用次数
+    crate::test_contract_type::test_contract_by_name("spawn_loop_times")
 }
 
 #[test]
+#[should_panic(expected = "ExceededMaximumCycles")]
 fn test_spawn_recursion_times() {
-    //gp
-    // 递归上限
+    crate::test_contract_type::test_contract_by_name("spawn_recursion_times")
 }
 
 #[test]
+#[should_panic(expected = "ExceededMaximumCycles")]
 fn test_cycle_inc_when_contains_recursion_and_loop_spawn() {
-    // gp
+    crate::test_contract_type::test_contract_by_name("spawn_cycle_inc_when_contains_recursion_and_loop_spawn")
 }
 
 
 #[test]
 fn test_spawn_can_stop_when_son_spawn_pause() {
-    // gp
-    // 子进程停了，子进程生成的spawn还没结束
+    crate::test_contract_type::test_contract_by_name("spawn_can_stop_when_son_spawn_pause")
 }

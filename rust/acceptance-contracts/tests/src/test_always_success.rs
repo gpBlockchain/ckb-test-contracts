@@ -6,22 +6,11 @@ use ckb_testtool::ckb_types::{
     packed::*,
     prelude::*,
 };
-use ckb_testtool::ckb_error::Error;
 
 const MAX_CYCLES: u64 = 10_000_000;
 
 // error numbers
-const ERROR_EMPTY_ARGS: i8 = 0;
 
-fn assert_script_error(err: Error, err_code: i8) {
-    let error_string = err.to_string();
-    assert!(
-        error_string.contains(format!("error code {} ", err_code).as_str()),
-        "error_string: {}, expected_error_code: {}",
-        error_string,
-        err_code
-    );
-}
 
 #[test]
 fn test_success() {
@@ -123,5 +112,4 @@ fn test_empty_args() {
         .verify_tx(&tx, MAX_CYCLES)
         .expect("pass verification");
     println!("test_empty_args: consume cycles: {}", cycles);
-
 }

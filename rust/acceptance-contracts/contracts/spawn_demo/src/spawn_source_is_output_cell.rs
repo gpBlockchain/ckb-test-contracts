@@ -22,6 +22,14 @@ use ckb_std::ckb_constants::Source;
 use ckb_std::env::argv;
 use ckb_std::syscalls::{current_cycles};
 
+/// invoke spawn in input
+/// 0. build spgs{args : [ hello, world] ,inherited_fds : write fd }
+/// 1. syscalls::spawn(0, Source::Output, 0, 0, &mut spgs).unwrap();
+/// 2. spawn args ==  [ hello, world]
+/// 3. spawn write [1u8, 1u8, 1u8, 1u8]
+/// 4. root process read [1u8, 1u8, 1u8, 1u8]
+/// 5. close  spawn process
+///
 pub fn program_entry() -> i8 {
     syscalls::debug("----spawn_source_is_output_cell-------".to_string());
     let argvs = argv();
@@ -33,7 +41,11 @@ pub fn program_entry() -> i8 {
         syscalls::debug(format!("[spawn] process_id:{:?}", process_id));
         assert_eq!(process_id, 1);
         syscalls::debug(format!("[spawn]argvs:{:?}", argvs));
+        // 2. spawn args ==  [ hello, world]
+
         // assert_eq!(argvs, ["hello", "world"]);
+
+        // 3. spawn write [1u8, 1u8, 1u8, 1u8]
         let mut std_fds: [u64; 1] = [0];
         syscalls::inherited_file_descriptors(&mut std_fds);
         syscalls::debug(format!("[spawn] write fd:{:?}", std_fds[0]));
@@ -48,6 +60,9 @@ pub fn program_entry() -> i8 {
     // spawn caller
     let argc: u64 = 2;
     print_current_cycle();
+
+    // 0. build spgs{args : [ hello, world] ,inherited_fds : write fd }
+
     let argv = {
         let mut argv = alloc::vec![core::ptr::null(); argc as usize + 1];
         argv[0] = CStr::from_bytes_with_nul(b"hello\0").unwrap().as_ptr();
@@ -67,6 +82,9 @@ pub fn program_entry() -> i8 {
         inherited_fds: child_fds.as_ptr(),
     };
     print_current_cycle();
+
+    // 1. syscalls::spawn(0, Source::Output, 0, 0, &mut spgs).unwrap();
+
     let spawn_result1 = syscalls::spawn(0, Source::Output, 0, 0, &mut spgs).unwrap();
     print_current_cycle();
     syscalls::debug(format!("spawn result:{:?}", spawn_result1));
@@ -75,12 +93,12 @@ pub fn program_entry() -> i8 {
     let read_result = syscalls::read(r0, &mut read).unwrap();
     print_current_cycle();
     syscalls::debug(format!("read result:{:?},data:{:?}", read_result, read));
-    // assert_eq!(read, [1, 1, 1, 1]);
+    assert_eq!(read, [1, 1, 1, 1]);
     print_current_cycle();
     let wait_result = syscalls::wait(spawn_result1).unwrap();
     print_current_cycle();
     syscalls::debug(format!("wait result:{:?}", wait_result));
-    // assert_eq!(wait_result, 25i8);
+    assert_eq!(wait_result, 25i8);
     syscalls::debug(format!("SpawnArgs.process_id:{:?}", pid));
     assert_eq!(pid, 1);
     return 0;
