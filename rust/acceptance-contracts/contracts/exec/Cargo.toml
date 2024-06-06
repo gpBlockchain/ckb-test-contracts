@@ -10,6 +10,12 @@ ckb-std = { git = "https://github.com/nervosnetwork/ckb-std.git", branch = "mast
 log = "0.4.21"
 
 
+
+[[bin]]
+name = "exec"
+path = "src/exec.rs"
+
+
 [[bin]]
 name = "ckb_process_id_in_exec"
 path = "src/ckb_process_id_in_exec.rs"
