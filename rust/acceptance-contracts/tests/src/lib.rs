@@ -18,6 +18,7 @@ mod test_contract_type;
 mod test_ckb_spawn;
 mod test_ckb_process_id;
 mod test_exec;
+mod test_ckb_pipe;
 
 const TEST_ENV_VAR: &str = "CAPSULE_TEST_ENV";
 

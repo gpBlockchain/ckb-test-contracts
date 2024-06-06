@@ -32,3 +32,7 @@ template_type = "Rust"
 [[contracts]]
 name = "exec"
 template_type = "Rust"
+
+[[contracts]]
+name = "ckb_pipe"
+template_type = "Rust"

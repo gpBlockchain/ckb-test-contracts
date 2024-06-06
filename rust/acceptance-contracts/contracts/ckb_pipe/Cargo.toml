@@ -1,0 +1,17 @@
+[package]
+name = "ckb_pipe"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+ckb-std = { git = "https://github.com/nervosnetwork/ckb-std.git", branch = "master", features = ["ckb2023"] }
+
+[[bin]]
+name = "ckb_pipe"
+path = "src/ckb_pipe.rs"
+
+[[bin]]
+name = "ckb_spawn_exited_fd_close"
+path = "src/ckb_spawn_exited_fd_close.rs"

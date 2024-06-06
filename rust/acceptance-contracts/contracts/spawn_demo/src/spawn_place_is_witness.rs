@@ -55,16 +55,16 @@ pub fn program_entry() -> i8 {
         argv
     };
 
-    let mut son_fds: [u64; 2] = [0, 0];
+    let mut child_fds: [u64; 2] = [0, 0];
     print_current_cycle();
     let (r0, w0) = syscalls::pipe().unwrap();
-    son_fds[0] = w0;
+    child_fds[0] = w0;
     let mut pid: u64 = 0;
     let mut spgs = syscalls::SpawnArgs {
         argc: argc,
         argv: argv.as_ptr(),
         process_id: &mut pid as *mut u64,
-        inherited_fds: son_fds.as_ptr(),
+        inherited_fds: child_fds.as_ptr(),
     };
     print_current_cycle();
     let spawn_result1 = match syscalls::spawn(0, Source::Output, 1, 0, &mut spgs) {
