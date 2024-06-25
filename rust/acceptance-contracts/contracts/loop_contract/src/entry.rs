@@ -9,7 +9,7 @@ use alloc::{vec, vec::Vec};
 // https://docs.rs/ckb-std/
 use ckb_std::{
     debug,
-    high_level::{load_script, load_cell_data, load_tx_hash, QueryIter},
+    high_level::{load_script, load_cell_data, QueryIter},
     ckb_types::{bytes::Bytes, prelude::*},
 };
 use ckb_std::ckb_constants::Source;

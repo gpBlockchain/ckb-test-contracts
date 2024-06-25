@@ -34,25 +34,47 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
-name = "ckb-standalone-types"
-version = "0.1.4"
+name = "ckb-gen-types"
+version = "0.112.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dd206470d9b270fe13f38c4c7fecabf323739f4930ea6f9b80e9490bfa750447"
+checksum = "4a12020d50dd3757cde0fdc88d3837b7a2ab503fe38bd11be86ddace11318c77"
 dependencies = [
- "blake2b-ref",
  "cfg-if",
+ "ckb-hash",
  "molecule",
 ]
 
 [[package]]
-name = "ckb-std"
-version = "0.14.2"
+name = "ckb-hash"
+version = "0.112.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8e05fb8e44ea056a54666881031036c9f58301037bf43b11a8e820634ee93d4d"
+checksum = "25af660fc8746f7c756444e6aa47ede9a874206563b6a1ce1b230a5b86519392"
+dependencies = [
+ "blake2b-ref",
+]
+
+[[package]]
+name = "ckb-std"
+version = "0.15.3"
+source = "git+https://github.com/libraries/ckb-std.git?branch=new_spawn#7f8f8c265b58ee0b291ab2924e861b1a530f4ef4"
 dependencies = [
  "buddy-alloc",
  "cc",
- "ckb-standalone-types",
+ "ckb-gen-types",
+ "gcd",
+]
+
+[[package]]
+name = "gcd"
+version = "2.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1d758ba1b47b00caf47f24925c0074ecb20d6dfcffe7f6d53395c0465674841a"
+
+[[package]]
+name = "load_block_extension"
+version = "0.1.0"
+dependencies = [
+ "ckb-std",
 ]
 
 [[package]]
@@ -69,6 +91,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d4fd9767ab5e5f2ea40f71ff4c8bdb633c50509052e093c2fdd0e390a749dfa3"
 dependencies = [
  "cfg-if",
+]
+
+[[package]]
+name = "rfc49_atomic"
+version = "0.1.0"
+dependencies = [
+ "ckb-std",
 ]
 
 [[package]]
