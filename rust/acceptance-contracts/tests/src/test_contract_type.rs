@@ -88,12 +88,16 @@ fn test_spawn_16_run_same_time() {
     test_contract_by_name("spawn_16_run_same_time")
 }
 
+#[test]
+fn test1(){
+    test_contract_by_name("atomic_usize")
+}
 
 pub(crate) fn test_contract_by_name(name: &str) {
     test_contract_by_name_with_cycle(name, MAX_CYCLES);
 }
 
-pub fn test_contract_by_name_with_cycle(name: &str, cycle: u64) {
+pub fn test_contract_by_name_with_cycle_with_type(name: &str, cycle: u64,hash_type: ScriptHashType) {
     let mut context = Context::default();
     let contract_bin: Bytes = Loader::default().load_binary(name);
     let out_point = context.deploy_cell(contract_bin.clone());
@@ -112,7 +116,7 @@ pub fn test_contract_by_name_with_cycle(name: &str, cycle: u64) {
 
     // prepare scripts
     let lock_script = context
-        .build_script_with_hash_type(&out_point, ScriptHashType::Data2, Bytes::from(vec![42]))
+        .build_script_with_hash_type(&out_point, hash_type, Bytes::from(vec![42]))
         .expect("script");
 
     // prepare cells
@@ -146,4 +150,8 @@ pub fn test_contract_by_name_with_cycle(name: &str, cycle: u64) {
         .should_be_passed(&tx, cycle)
         .expect("pass verification");
     println!("test_success: consume cycles: {}", cycles);
+}
+
+pub fn test_contract_by_name_with_cycle(name: &str, cycle: u64) {
+    test_contract_by_name_with_cycle_with_type(name,cycle,ScriptHashType::Data2)
 }
