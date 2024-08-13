@@ -88,6 +88,17 @@ fn test_spawn_16_run_same_time() {
     test_contract_by_name("spawn_16_run_same_time")
 }
 
+#[test]
+fn test_spawn_with_exec() {
+    test_contract_by_name("spawn_with_exec")
+}
+
+#[test]
+fn test_exec_with_block_opcode(){
+    test_contract_by_name("exec_with_block_opcode")
+}
+
+
 
 pub(crate) fn test_contract_by_name(name: &str) {
     test_contract_by_name_with_cycle(name, MAX_CYCLES);
