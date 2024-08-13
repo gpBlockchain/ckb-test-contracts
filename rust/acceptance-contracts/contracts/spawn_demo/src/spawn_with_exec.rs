@@ -57,7 +57,7 @@ pub fn program_entry() -> i8 {
     }
 
     // spawn caller
-    let argc: u64 = 2;
+    let argc: u64 = 1;
     let argv = {
         let mut argv = alloc::vec![core::ptr::null(); argc as usize + 1];
         argv[0] = CStr::from_bytes_with_nul(b"hello\0").unwrap().as_ptr();
