@@ -20,6 +20,10 @@ path = "src/exec.rs"
 name = "ckb_process_id_in_exec"
 path = "src/ckb_process_id_in_exec.rs"
 
+[[bin]]
+name = "exec_with_block_opcode"
+path = "src/exec_with_block_opcode.rs"
+
 
 [[bin]]
 name = "exec_with_exec"
