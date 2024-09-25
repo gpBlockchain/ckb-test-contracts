@@ -28,7 +28,7 @@ pub fn program_entry() -> i8 {
 
     if process_id() == 1 {
         let mut std_fds: [u64; 1] = [0];
-        syscalls::inherited_file_descriptors(&mut std_fds);
+        syscalls::inherited_fds(&mut std_fds);
         let mut pid: u64 = 0;
         let mut spgs = syscalls::SpawnArgs {
             argc: 0,
@@ -50,7 +50,7 @@ pub fn program_entry() -> i8 {
         syscalls::debug(format!("[spawn]argvs:{:?}", argvs));
         // assert_eq!(argvs, ["hello", "world"]);
         let mut std_fds: [u64; 1] = [0];
-        syscalls::inherited_file_descriptors(&mut std_fds);
+        syscalls::inherited_fds(&mut std_fds);
         syscalls::debug(format!("[spawn] write fd:{:?}", std_fds[0]));
         print_current_cycle();
         let write_result = syscalls::write(std_fds[0], &[1u8, 1u8, 1u8, 1u8]).unwrap();

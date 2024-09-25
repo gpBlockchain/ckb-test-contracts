@@ -34,8 +34,8 @@ pub fn program_entry() -> i8 {
         debug(format!("[spawn]argvs:{:?}", argvs));
         // assert_eq!(argvs, ["hello", "world"]);
         let mut std_fds: [u64; 1] = [0];
-        syscalls::inherited_file_descriptors(&mut std_fds);
-        debug(format!("[spawn] inherited_file_descriptors fd:{:?}", std_fds));
+        syscalls::inherited_fds(&mut std_fds);
+        debug(format!("[spawn] inherited_fds fd:{:?}", std_fds));
         print_current_cycle();
         for _ in 0..write_times {
             match syscalls::write(std_fds[0], &[syscalls::process_id() as u8, syscalls::process_id() as u8, syscalls::process_id() as u8, syscalls::process_id() as u8]) {
