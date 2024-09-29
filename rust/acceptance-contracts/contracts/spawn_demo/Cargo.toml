@@ -6,87 +6,110 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-ckb-std={ git = "https://github.com/nervosnetwork/ckb-std.git", branch = "master", features = ["ckb2023"] }
+ckb-std = { version = "0.16", git = "https://github.com/nervosnetwork/ckb-std.git" }
+log = "0.4.21"
 
 
 [[bin]]
 name = "spawn_demo"
-path = "src/main.rs"
+path = "src/spawn_demo.rs"
 
 [[bin]]
-name = "spawn_wrong_memory_limit"
-path = "src/spawn_wrong_memory_limit.rs"
+name = "spawn_source_is_input_cell"
+path = "src/spawn_source_is_input_cell.rs"
 
 [[bin]]
-name = "spawn_elf_format_error"
-path = "src/spawn_elf_format_error.rs"
+name = "spawn_source_is_output_cell"
+path = "src/spawn_source_is_output_cell.rs"
 
 [[bin]]
-name = "spawn_exceeded_max_content_length"
-path = "src/spawn_exceeded_max_content_length.rs"
-
-[[bin]]
-name = "spawn_exceeded_max_peak_memory"
-path = "src/spawn_exceeded_max_peak_memory.rs"
-
-[[bin]]
-name = "spawn_index"
-path = "src/spawn_index.rs"
-
-[[bin]]
-name = "spawn_argc_not_eq"
-path = "src/spawn_argc_not_eq.rs"
-
-[[bin]]
-name = "spawn_argv"
-path = "src/spawn_argv.rs"
-
-[[bin]]
-name = "spawn_content"
-path = "src/spawn_content.rs"
-
-[[bin]]
-name = "spawn_argc_is_u64_max"
-path = "src/spawn_argc_is_u64_max.rs"
-
-[[bin]]
-name = "spawn_query"
-path = "src/spawn_query.rs"
-
-[[bin]]
-name = "spawn_times"
-path = "src/spawn_times.rs"
-[[bin]]
-name = "spawn_recursive"
-path = "src/spawn_recursive.rs"
-
-[[bin]]
-name = "spawn_fib"
-path = "src/spawn_fib.rs"
-
-[[bin]]
-name = "spawn_out_of_memory"
-path = "src/spawn_out_of_memory.rs"
-
-[[bin]]
-name = "spawn_exec_memory_limit_le_7"
-path = "src/spawn_exec_memory_limit_le_7.rs"
-
-[[bin]]
-name = "spawn_exec_set_content"
-path = "src/spawn_exec_set_content.rs"
-
-[[bin]]
-name = "spawn_exec_spawn"
-path = "src/spawn_exec_spawn.rs"
+name = "spawn_place_is_out_of_range"
+path = "src/spawn_place_is_out_of_range.rs"
 
 
 [[bin]]
-name = "spawn_current_cycles"
-path = "src/spawn_current_cycles.rs"
+name = "spawn_place_is_witness"
+path = "src/spawn_place_is_witness.rs"
+
 
 [[bin]]
-name = "spawn_current_memory"
-path = "src/spawn_current_memory.rs"
+name = "spawn_16_run_same_time"
+path = "src/spawn_16_run_same_time.rs"
 
 
+[[bin]]
+name = "spawn_create_17_spawn"
+path = "src/spawn_create_17_spawn.rs"
+
+[[bin]]
+name = "spawn_stop_16_spawn_create_17_spawn"
+path = "src/spawn_stop_16_spawn_create_17_spawn.rs"
+
+[[bin]]
+name = "spawn_loop_times"
+path = "src/spawn_loop_times.rs"
+
+[[bin]]
+name = "spawn_recursion_times"
+path = "src/spawn_recursion_times.rs"
+
+[[bin]]
+name = "spawn_cycle_inc_when_contains_recursion_and_loop_spawn"
+path = "src/spawn_cycle_inc_when_contains_recursion_and_loop_spawn.rs"
+
+[[bin]]
+name = "spawn_can_stop_when_son_spawn_pause"
+path = "src/spawn_can_stop_when_son_spawn_pause.rs"
+
+[[bin]]
+name = "spawn_with_exec"
+path = "src/spawn_with_exec.rs"
+
+
+[[bin]]
+name = "spawn_loop_times_max"
+path = "src/spawn_loop_times_max.rs"
+
+[[bin]]
+name = "ckb_spawn_for"
+path = "src/ckb_spawn_for.rs"
+
+[[bin]]
+name = "spawn_bounds_is_out_of_range"
+path = "src/spawn_bounds_is_out_of_range.rs"
+
+[[bin]]
+name = "spawn_bounds_is_not_0"
+path = "src/spawn_bounds_is_not_0.rs"
+
+[[bin]]
+name = "spawn_invoke_block_opcode"
+path = "src/spawn_invoke_block_opcode.rs"
+
+[[bin]]
+name = "spawn_invaild_index"
+path = "src/spawn_invaild_index.rs"
+
+[[bin]]
+name = "spawn_argc_is_large"
+path = "src/spawn_argc_is_large.rs"
+
+[[bin]]
+name = "spawn_inherited_fds_end_is_not_0"
+path = "src/spawn_inherited_fds_end_is_not_0.rs"
+
+[[bin]]
+name = "spawn_inherited_fds_0_is_in_mid"
+path = "src/spawn_inherited_fds_0_is_in_mid.rs"
+
+[[bin]]
+name = "spawn_inherited_fds_not_exist_fd"
+path = "src/spawn_inherited_fds_not_exist_fd.rs"
+
+[[bin]]
+name = "spawn_inherited_fds_contains_closed_fd"
+path = "src/spawn_inherited_fds_contains_closed_fd.rs"
+
+[[bin]]
+name = "spawn_inherited_fds_not_exist"
+path = "src/spawn_inherited_fds_not_exist.rs"

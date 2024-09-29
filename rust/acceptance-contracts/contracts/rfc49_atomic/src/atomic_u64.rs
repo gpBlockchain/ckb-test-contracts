@@ -12,11 +12,6 @@ ckb_std::entry!(program_entry);
 default_alloc!();
 
 
-use core::result::Result;
-
-use ckb_std::{debug};
-use ckb_std::env::argv;
-use ckb_std::syscalls::{set_content};
 
 use core::sync::atomic::{AtomicU64, Ordering};
 

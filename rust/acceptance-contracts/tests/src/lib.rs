@@ -1,14 +1,24 @@
-use ckb_testtool::ckb_types::bytes::Bytes;
 use std::env;
 use std::fs;
 use std::path::PathBuf;
 use std::str::FromStr;
-
+use ckb_testtool::{
+    ckb_error::Error,
+    ckb_types::{
+        bytes::Bytes,
+        core::{Cycle, TransactionView},
+    },
+    context::Context,
+};
 #[cfg(test)]
 
 mod test_loop_contract;
 mod test_always_success;
 mod test_contract_type;
+mod test_ckb_spawn;
+mod test_ckb_process_id;
+mod test_exec;
+mod test_ckb_pipe;
 
 const TEST_ENV_VAR: &str = "CAPSULE_TEST_ENV";
 
@@ -62,3 +72,57 @@ impl Loader {
         fs::read(path).expect("binary").into()
     }
 }
+
+
+pub mod prelude {
+    use ckb_testtool::{
+        ckb_error::Error,
+        ckb_types::core::{Cycle, TransactionView},
+    };
+
+    pub const MAX_CYCLES: u64 = 10_000_000;
+    pub const SPV_CELL_CAP: u64 = 500;
+    pub const SPV_HEADERS_GROUP_SIZE: usize = 20; // Speed up to save time.
+
+    // This helper method runs Context::verify_tx, but in case error happens,
+    // it also dumps current transaction to failed_txs folder.
+    pub trait ContextExt {
+        fn should_be_passed(&self, tx: &TransactionView, max_cycles: u64) -> Result<Cycle, Error>;
+        fn should_be_failed(&self, tx: &TransactionView, max_cycles: u64) -> Result<Cycle, Error>;
+    }
+}
+
+impl prelude::ContextExt for Context {
+    fn should_be_passed(&self, tx: &TransactionView, max_cycles: u64) -> Result<Cycle, Error> {
+        let result = self.verify_tx(tx, max_cycles);
+        if let Err(err) = result {
+            let mut path = env::current_dir().expect("current dir");
+            path.push("failed_txs");
+            std::fs::create_dir_all(&path).expect("create failed_txs dir");
+            let mock_tx = self.dump_tx(tx).expect("dump failed tx");
+            let json = serde_json::to_string_pretty(&mock_tx).expect("json");
+            path.push(format!("0x{:x}.json", tx.hash()));
+            println!("Failed tx written to {:?}", path);
+            std::fs::write(path, json).expect("write");
+            panic!("should be passed, but failed since {err}");
+        }
+        result
+    }
+
+    fn should_be_failed(&self, tx: &TransactionView, max_cycles: u64) -> Result<Cycle, Error> {
+        let result = self.verify_tx(tx, max_cycles);
+        if result.is_ok() {
+            let mut path = env::current_dir().expect("current dir");
+            path.push("failed_txs");
+            std::fs::create_dir_all(&path).expect("create failed_txs dir");
+            let mock_tx = self.dump_tx(tx).expect("dump failed tx");
+            let json = serde_json::to_string_pretty(&mock_tx).expect("json");
+            path.push(format!("0x{:x}.json", tx.hash()));
+            println!("Failed tx written to {:?}", path);
+            std::fs::write(path, json).expect("write");
+            panic!("should be failed");
+        }
+        result
+    }
+}
+

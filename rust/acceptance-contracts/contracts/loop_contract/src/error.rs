@@ -7,11 +7,7 @@ pub enum Error {
     ItemMissing,
     LengthNotEnough,
     Encoding,
-    // Add customized errors here...
-    SpawnExceededMaxContentLength,
-    SpawnWrongMemoryLimit,
-    SpawnExceededMaxPeakMemory,
-    MyError,
+    MyError
 }
 
 impl From<SysError> for Error {
@@ -23,9 +19,7 @@ impl From<SysError> for Error {
             LengthNotEnough(_) => Self::LengthNotEnough,
             Encoding => Self::Encoding,
             Unknown(err_code) => panic!("unexpected sys error {}", err_code),
-            SpawnExceededMaxContentLength => Self::SpawnExceededMaxContentLength,
-            SpawnWrongMemoryLimit => Self::SpawnWrongMemoryLimit,
-            SpawnExceededMaxPeakMemory => Self::SpawnExceededMaxPeakMemory
+            _ => Self::MyError
         }
     }
 }

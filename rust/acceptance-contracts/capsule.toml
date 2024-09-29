@@ -20,13 +20,6 @@ template_type = "Rust"
 name = "loop_contract"
 template_type = "Rust"
 
-[[contracts]]
-name = "ckb_get_memory_limit"
-template_type = "Rust"
-
-[[contracts]]
-name = "set_content"
-template_type = "Rust"
 
 [[contracts]]
 name = "rfc49_atomic"
@@ -34,4 +27,12 @@ template_type = "Rust"
 
 [[contracts]]
 name = "load_block_extension"
+template_type = "Rust"
+
+[[contracts]]
+name = "exec"
+template_type = "Rust"
+
+[[contracts]]
+name = "ckb_pipe"
 template_type = "Rust"

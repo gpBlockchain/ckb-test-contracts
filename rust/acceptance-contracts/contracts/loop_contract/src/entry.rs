@@ -9,7 +9,7 @@ use alloc::{vec, vec::Vec};
 // https://docs.rs/ckb-std/
 use ckb_std::{
     debug,
-    high_level::{load_script, load_cell_data, load_tx_hash, QueryIter},
+    high_level::{load_script, load_cell_data, QueryIter},
     ckb_types::{bytes::Bytes, prelude::*},
 };
 use ckb_std::ckb_constants::Source;
@@ -27,24 +27,24 @@ pub fn main() -> Result<(), Error> {
     if args.is_empty() {
         return Err(Error::MyError);
     }
-    let loopCount = collect_outputs_amount()?;
+    let loop_count = collect_outputs_amount()?;
     // check cpu or mem
     if let Some(&first_byte) = args.first() {
         if first_byte == 1 {
             // mem
-            if loopCount < 15000 {
-                let a = vec![0; loopCount as usize];
+            if loop_count < 15000 {
+                let _ = vec![0; loop_count as usize];
                 return Ok(());
             }
             let mut vec_arr = vec![];
-            for i in (0..loopCount).step_by(100) {
+            for _ in (0..loop_count).step_by(100) {
                 let a = vec![0; 100 as usize];
                 vec_arr.push(a);
             }
             return Ok(());
         }
     }
-    let ret = sum(loopCount);
+    let ret = sum(loop_count);
     debug!("cpu:{:?}",ret);
     return Ok(());
 }
@@ -78,9 +78,4 @@ fn collect_outputs_amount() -> Result<u128, Error> {
     Ok(udt_list.into_iter().sum::<u128>())
 }
 
-// Unit tests are supported.
-#[test]
-fn test_foo() {
-    assert!(true);
-}
 
